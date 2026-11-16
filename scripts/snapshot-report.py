@@ -9,6 +9,7 @@ parser.add_argument("--out", default=None, help="Output folder (defaults to docu
 parser.add_argument("--prefix", default="report", help="Filename prefix")
 parser.add_argument("--list", action="store_true", help="List sheets and exit")
 parser.add_argument("--no-kill", action="store_true", help="Do not kill Excel before starting")
+parser.add_argument("--keep", action="store_true", help="Do not delete existing PNGs in output folder before exporting")
 args = parser.parse_args()
 
 script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -38,12 +39,13 @@ if not os.path.exists(path):
 path = os.path.abspath(path)
 os.makedirs(out_folder, exist_ok=True)
 
-for f in os.listdir(out_folder):
-    if f.lower().endswith(".png"):
-        try:
-            os.remove(os.path.join(out_folder, f))
-        except OSError:
-            pass
+if not args.keep:
+    for f in os.listdir(out_folder):
+        if f.lower().endswith(".png"):
+            try:
+                os.remove(os.path.join(out_folder, f))
+            except OSError:
+                pass
 
 
 def save_sheet_image(workbook, worksheet, png_path):

@@ -45,7 +45,7 @@ args = parser.parse_args()
 script_dir = os.path.dirname(os.path.abspath(__file__))
 project_root = os.path.dirname(script_dir)
 template = args.template or os.path.join(project_root, "Re-Auth Template.xlsm")
-source_path = args.source or os.path.join(project_root, "reauth raw.csv")
+source_path = os.path.abspath(args.source or os.path.join(project_root, "reauth raw.csv"))
 temp_copy = args.temp_copy or os.path.join(project_root, "_run_temp.xlsm")
 max_run_seconds = args.max_run_seconds
 

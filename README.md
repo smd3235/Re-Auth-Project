@@ -1,108 +1,278 @@
 # Re-Auth Report Builder
 
-Automated Excel/VBA report builder for **weekly pending and upcoming patient re-authorizations**. It converts a raw re-auth export (CSV/Excel) into a formatted workbook with a **Dashboard**, one **manager tab** per Assigned Sales Manager (plus `Unassigned`), and a **Raw Data** tab.
+Automated Excel/VBA report builder for **weekly pending and upcoming patient re-authorizations**. It transforms a raw re-auth export (CSV or Excel) into a formatted, manager-ready workbook containing a KPI **Dashboard**, one **manager tab** per Assigned Sales Manager (plus `Unassigned`), and a full-fidelity **Raw Data** tab.
 
-> **GitHub note:** GitHub renders repository README content below the file browser by design; this README is kept at repo root so the overview and screenshots appear immediately in that section.
+- **Repository:** https://github.com/smd3235/Re-Auth-Project
+- **Template:** `Re-Auth Template.xlsm` (macro entry: `CreateReAuthReport`, button **CREATE RE-AUTH REPORT** on `START HERE`)
+- **Sample input:** `reauth raw.csv` (fake/sample data only)
+- **Output:** `Reports\ReAuth_Report_YYYY-mm-dd_HHMM.xlsx`
+- **Latest generated sample:** `Reports\ReAuth_Report_2026-11-16_1139.xlsx` (source: `reauth raw.csv`, 145 rows / 12 managers / 15 WCCs, generated 2026-11-16 11:39 AM)
 
-## Screenshots
+> **GitHub display note:** GitHub renders a repository README in the section **below** the file browser by design. This README is kept at the repo root so the overview and screenshots appear in that rendered section when viewing the repository.
 
-Captured from a generated report (`Reports\ReAuth_Report_2026-11-16_1132.xlsx`, sample/fake data) using `scripts\snapshot-report.py`.
+---
+
+## Screenshots (clean capture from latest report)
+
+All screenshots below were exported from `Reports\ReAuth_Report_2026-11-16_1139.xlsx` using `scripts\snapshot-report.py` (Excel COM `CopyPicture` → chart export). They reflect the current layout, styling, and sample data.
 
 ### Dashboard
+KPI summary cards and a manager breakdown table aligned edge-to-edge across columns A:J.
+
 ![Dashboard](documentation/screenshots/report-dashboard.png)
 
-### Manager tab example
-Each manager gets a dedicated tab with a rep summary, a single header row (row 15), and filtered/formatted data.
+### Manager tab (example: Taylor Brooks)
+Each manager receives a dedicated tab with title/totals, a per-rep summary block, and a single filtered data table (header row 15, data from row 16, frozen at `A16`).
 
-![Taylor Brooks](documentation/screenshots/report-taylor-brooks.png)
+![Taylor Brooks manager tab](documentation/screenshots/report-taylor-brooks.png)
 
-### More manager tabs
+### Additional manager tabs
 <details>
-<summary>Show additional manager screenshots</summary>
+<summary>Expand to view all other manager tabs and Unassigned</summary>
 
+**Riley Chen**  
 ![Riley Chen](documentation/screenshots/report-riley-chen.png)
+
+**Cameron Diaz**  
 ![Cameron Diaz](documentation/screenshots/report-cameron-diaz.png)
+
+**Avery Johnson**  
 ![Avery Johnson](documentation/screenshots/report-avery-johnson.png)
+
+**Jordan Lee**  
 ![Jordan Lee](documentation/screenshots/report-jordan-lee.png)
+
+**Alex Morgan**  
 ![Alex Morgan](documentation/screenshots/report-alex-morgan.png)
+
+**Parker Nguyen**  
 ![Parker Nguyen](documentation/screenshots/report-parker-nguyen.png)
+
+**Morgan Patel**  
 ![Morgan Patel](documentation/screenshots/report-morgan-patel.png)
+
+**Skyler Reed**  
 ![Skyler Reed](documentation/screenshots/report-skyler-reed.png)
+
+**Casey Rivera**  
 ![Casey Rivera](documentation/screenshots/report-casey-rivera.png)
+
+**Drew Sullivan**  
 ![Drew Sullivan](documentation/screenshots/report-drew-sullivan.png)
+
+**Jamie Torres**  
 ![Jamie Torres](documentation/screenshots/report-jamie-torres.png)
+
+**Unassigned** (records with no Assigned Sales Manager)  
 ![Unassigned](documentation/screenshots/report-unassigned.png)
 
 </details>
 
 ### Raw Data
+All source rows and all original columns preserved in original order (formatted/filterable).
+
 ![Raw Data](documentation/screenshots/report-raw-data.png)
+
+---
+
+## What the report does
+
+1. Reads a raw re-auth dataset (`.csv`/`.xlsx`/`.xlsm`/`.xls`).
+2. Detects the header row and required columns; normalizes key date fields when parseable.
+3. Groups records by **Assigned Sales Manager** (blank manager → **Unassigned**).
+4. Builds a styled output workbook:
+   - **Dashboard** with KPI totals, status distribution, and manager-level breakdown/hyperlinks.
+   - **One tab per manager** with a per–Sales Rep (Wound Care Consultant) count summary and a curated working table.
+   - **Raw Data** with every original field intact.
+5. Saves to `Reports\ReAuth_Report_YYYY-mm-dd_HHMM.xlsx` and writes runtime logs/completion markers for traceability.
+
+---
 
 ## Quick start
 
-### End users (Excel)
-1. Open **`Re-Auth Template.xlsm`** (Windows desktop Excel) and enable macros.
-2. Click **`CREATE RE-AUTH REPORT`** on **`START HERE`**.
-3. Select the raw re-auth export (`.csv`, `.xlsx`, `.xlsm`, `.xls`).
-4. Output is saved to `Reports\ReAuth_Report_YYYY-mm-dd_HHMM.xlsx`.
+### End users (Excel, Windows)
+1. Open **`Re-Auth Template.xlsm`** in desktop Microsoft Excel.
+2. Enable macros/content if prompted.
+3. Go to **`START HERE`** and click **`CREATE RE-AUTH REPORT`**.
+4. Select the raw re-auth file when prompted.
+5. Wait for completion; the report is saved to `Reports\ReAuth_Report_YYYY-mm-dd_HHMM.xlsx`.
 
-### Maintainers (unattended run)
-Prereqs: Windows + Excel + Python 3 + `pywin32`.
+### Maintainers (unattended / CLI)
+**Prerequisites:** Windows, desktop Excel (COM), Python 3, `pywin32` (`win32com`). For sync/compile tooling, Excel must allow programmatic access to the VBA project (Trust access to the VBA project object model).
 
 ```powershell
 cd "C:\Users\smd32\Downloads\Re-Auth Project"
+
+# 1) Sync VBA source modules into the template
 python .\scripts\sync_template.py
+
+# 2) Compile-check embedded VBA
 python .\scripts\test-compile.py
-python .\scripts\run-report.py --source ".\reauth raw.csv"
+
+# 3) Generate a report (unattended; prefers absolute source path)
+python .\scripts\run-report.py --source "$PWD\reauth raw.csv"
+
+# 4) Capture clean README screenshots from newest report
 python .\scripts\snapshot-report.py
+
+# (optional) reorder/view runtime logs newest-first
+python .\scripts\view-logs.py
 ```
 
-## Input data
-- **Supported:** `.csv`, `.xlsx`, `.xlsm`, `.xls` (blank cells allowed).
-- **Required headers (detected):** `Assigned Sales Manager`, `Auth Status`, `Patient Name`, `Re-auth Due Date`.
-- **Grouping:** rows grouped by `Assigned Sales Manager`; blank -> `Unassigned`.
-- **Status bucketing:** `Auth Status` categorized as Past Due / Upcoming / Denied / Other (case-insensitive contains).
-- **Dates:** key date fields normalized/formatted when parseable (e.g. `Re-auth Due Date`, `Auth Start Date`).
+`scripts\run-report.py` runs `CreateReAuthReport` via COM, manages `log\auto-source.txt`, auto-answers common dialogs, enforces a watchdog, and prints `OUTCOME=` / `NEW_REPORT=`.
 
-Sample/fake input: `reauth raw.csv`.
+---
 
-## Output specification
-Each run creates `Reports\ReAuth_Report_YYYY-mm-dd_HHMM.xlsx` with:
-1. **Dashboard** – title/timestamp/source, KPI cards (`TOTAL RE-AUTHS`, `PAST DUE`, `UPCOMING`, `DENIED`, `OTHER`), manager breakdown (Total, Past Due, % Past Due, link to tab) aligned edge-to-edge across A:J.
-2. **Manager tabs** (one per manager, sorted; includes `Unassigned`) – title/total/timestamp, **RE-AUTHS BY SALES REP** summary block, table header at row 15 with data from row 16, frozen at `A16`, autofilter.
-   - Columns: `Wound Care Consultant`, `Associate WCC`, `Patient Name`, `HC Company`, `Re-auth Due Date`, `Auth Start Date`, `Auth Status`, `Authorization Status`, `Task Required`, `Patient/Packet Status`, `Treatment Physician`.
-   - Manager/denial/qty/NPI fields remain in Raw Data (not duplicated on manager tabs).
-3. **Raw Data** – all rows/columns in original order, formatted and filterable.
+## Input data contract
+
+### Supported formats
+- `.csv`, `.xlsx`, `.xlsm`, `.xls`
+- Blank cells are allowed and preserved where applicable.
+
+### Required headers (auto-detected)
+The macro scans for a header row containing at least:
+- `Assigned Sales Manager`
+- `Auth Status`
+- `Patient Name`
+- `Re-auth Due Date`
+
+### Common schema fields (sample: `reauth raw.csv`)
+`Wound Care Consultant`, `Associate WCC`, `Re-auth Due Date`, `HC Company`, `Patient Name`, `Patient/Packet Status`, `Task Required`, `Auth Start Date`, `Auth Status`, `Authorization Status`, `Authorization Sub Status`, `Pending SO Amount`, `Initial Authorization Denial Date`, `Authorization Denial Reason`, `Denial Reason Sub List`, `Sales Order RX Qty Requested`, `Sales Order RX Qty Approved`, `Treatment Physician`, `Treatment Physician NPI Number`, `Assigned Sales Manager`.
+
+### Data handling rules
+- **Manager grouping:** `Assigned Sales Manager` groups rows into tabs; empty/blank → `Unassigned`.
+- **Status bucketing (Dashboard/summary):** `Auth Status` evaluated case-insensitively — contains `past due` → Past Due, `upcoming` → Upcoming, `denied` → Denied, else Other.
+- **Date normalization:** Key date columns (e.g. `Re-auth Due Date`, `Auth Start Date`, denial date where applicable) are normalized to Excel dates and formatted when parseable; non-parseable values remain as-is.
+- **CSV note:** Malformed delimiter/encoding can cause misaligned columns; re-export as clean CSV or `.xlsx` if headers/values do not import correctly.
+
+---
+
+## Output specification (sheet by sheet)
+
+### 1) Dashboard
+- **Title:** `RE-AUTHORIZATION DASHBOARD` with generation timestamp and source filename.
+- **KPI cards (A:J grid):** `TOTAL RE-AUTHS`, `PAST DUE`, `UPCOMING`, `DENIED`, `OTHER`.
+- **Manager breakdown (aligned to A:J):** `Assigned Sales Manager`, `Total`, `Past Due`, `% Past Due` (highlighted at elevated rates), and `Tab` hyperlink (“Open”) to each manager sheet.
+- Styled header banding, frozen header area, and consistent column alignment/widths for edge-to-edge readability.
+
+### 2) Manager tabs (one per manager + Unassigned)
+- **Title block:** `RE-AUTH  |  <MANAGER NAME>`, `Total re-auths: N`, generated timestamp.
+- **Per-rep summary:** merged block **`A5:K9`** labeled `RE-AUTHS BY SALES REP` showing counts per `Wound Care Consultant` within the manager’s records.
+- **Data table:** header at **row 15**, data starts at **row 16**, autofilter enabled, freeze panes at **`A16`**.
+- **Columns (in order):**
+  1. `Wound Care Consultant`
+  2. `Associate WCC`
+  3. `Patient Name`
+  4. `HC Company`
+  5. `Re-auth Due Date`
+  6. `Auth Start Date`
+  7. `Auth Status`
+  8. `Authorization Status`
+  9. `Task Required`
+  10. `Patient/Packet Status`
+  11. `Treatment Physician`
+- **Excluded from manager tabs (available in Raw Data):** `Assigned Sales Manager`, `Treatment Physician NPI Number`, `Pending SO Amount`, `Sales Order RX Qty Requested`, `Sales Order RX Qty Approved`, `Authorization Sub Status`, `Initial Authorization Denial Date`, `Authorization Denial Reason`, `Denial Reason Sub List`.
+- **Formatting:** Segoe UI styling, bordered/striped table, date formatting on key fields, status-based highlighting (e.g. Past Due / Upcoming / Denied).
+
+### 3) Raw Data
+- Contains **all rows** from the source with **all original columns in original order**.
+- Header formatting, borders, autofilter, frozen header row, and date normalization/formatting on key date columns.
+
+---
 
 ## Repository layout
+
 | Path | Purpose |
 |---|---|
-| `Re-Auth Template.xlsm` | Master macro-enabled template (START HERE + embedded VBA) |
-| `modCore.bas`, `modDeclarations.bas`, `modFormatting.bas`, `modLogging.bas`, `modUtils.bas` | VBA source of truth |
-| `scripts/sync_template.py` | Import `mod*.bas` into template and refresh button |
-| `scripts/run-report.py` | Unattended COM harness (dialogs/watchdog/logs) |
-| `scripts/test-compile.py`, `scripts/watch-compile-error.py` | VBA compile checks/dialog capture |
-| `scripts/answer-dialogs.py` | Excel/VBA dialog auto-answer helper |
-| `scripts/snapshot-report.py` | Export report sheets to `documentation/screenshots/*.png` |
-| `scripts/view-logs.py` | Reorder runtime logs newest-first |
-| `documentation/screenshots/` | README screenshots (QA/sample data) |
-| `Reports/`, `log/` | Generated outputs and runtime logs (ignored except `.gitkeep`/docs assets) |
+| `Re-Auth Template.xlsm` | Master macro-enabled template (START HERE + embedded VBA + button) |
+| `modCore.bas` | Main workflow (`CreateReAuthReport`): load, parse, group, build sheets, save, error handling |
+| `modDeclarations.bas` | Constants/headers/paths and shared runtime state (`PROJECT_ROOT`, log/marker paths, layout constants) |
+| `modFormatting.bas` | Dashboard, manager, and Raw Data formatting, KPI cards, rep-summary block, status highlights |
+| `modLogging.bas` | Realtime/per-run logging, step/error logging, completion marker |
+| `modUtils.bas` | Header/date/array utilities, sheet naming, output path, output array builders |
+| `reauth raw.csv` | Sample/fake raw input used for test/report generation |
+| `scripts/sync_template.py` | Import `mod*.bas` into template and refresh `btnCreateReAuthReport` → `CreateReAuthReport` |
+| `scripts/run-report.py` | Robust unattended COM harness (temp copy, auto-source, dialog auto-answer, watchdog, logs, outcome detection) |
+| `scripts/test-compile.py` | VBA compile probe (`COMPILE_OK`) |
+| `scripts/watch-compile-error.py` | Capture/dismiss Excel/VBA compile/runtime dialogs |
+| `scripts/answer-dialogs.py` | Standalone dialog auto-answer helper |
+| `scripts/snapshot-report.py` | Export all (or selected) report sheets to PNG screenshots in `documentation/screenshots/` |
+| `scripts/view-logs.py` | Reorder runtime logs newest-first for review |
+| `documentation/screenshots/` | Committed README screenshots (generated from sample report) |
+| `Reports/` | Generated `.xlsx` outputs (gitignored) |
+| `log/` | Runtime logs/markers/diagnostics (gitignored except `log/.gitkeep`) |
 
-## Logging & troubleshooting
-- `log/macro-debug.log` – VBA step/error trace
-- `log/reauth-complete.txt` – completion marker/saved path
-- `log/reauth_*.log`, `log/answer-dialogs.log`, `log/watcher.log`, `log/compile-test.log` – run/diagnostic logs
+---
 
+## Screenshot / report capture workflow
+
+`scripts/snapshot-report.py` is the project’s image-capture tool for README/review assets (adapted from the Pending Pickup project pattern):
+
+- Finds the newest workbook in `Reports\` by default (or use `--path`).
+- Opens Excel via COM, activates each sheet, copies `UsedRange` as a picture, pastes/exports via a chart object to PNG.
+- Writes to `documentation/screenshots/` with deterministic names (`report-dashboard.png`, `report-<sheet>.png`, `report-raw-data.png`).
+- Clears existing PNGs in the output folder before export so screenshots stay in sync with the selected report.
+
+Examples:
+```powershell
+# Export all sheets from the newest report
+python .\scripts\snapshot-report.py
+
+# Export from a specific report
+python .\scripts\snapshot-report.py --path "Reports\ReAuth_Report_2026-11-16_1139.xlsx"
+
+# Export specific sheets only
+python .\scripts\snapshot-report.py --sheets Dashboard "Taylor Brooks" "Raw Data"
+
+# List sheets without exporting
+python .\scripts\snapshot-report.py --list
+```
+
+---
+
+## Logging, diagnostics, and troubleshooting
+
+### Key runtime artifacts (`log/`)
+| File | Purpose |
+|---|---|
+| `macro-debug.log` | Always-on VBA step/error trace across runs |
+| `reauth-complete.txt` | Completion marker with saved path / failure message and run log reference |
+| `reauth_YYYY-mm-dd_HHMMSS.log` | Per-run logs (Python harness and/or VBA run context/tail) |
+| `answer-dialogs.log` | Dialog detection and auto-answer actions |
+| `watcher.log` | Captured VBA/Excel compile/runtime dialog text |
+| `compile-test.log` | Compile probe output |
+
+### Common checks
 ```powershell
 python .\scripts\view-logs.py
 python .\scripts\test-compile.py
+python .\scripts\run-report.py --source "$PWD\reauth raw.csv"
 ```
 
-If generation fails: check `OUTCOME`/`NEW_REPORT` from `run-report.py`, inspect macro-debug tail and watcher/compile logs, and re-sync template after `.bas` edits.
+### Troubleshooting notes
+- **VBA compile issues:** run `scripts\test-compile.py` and inspect `log\compile-test.log` / `log\watcher.log`.
+- **Dialogs/hangs:** `scripts\run-report.py` and `scripts\answer-dialogs.py` attempt to auto-dismiss common Excel/VBA prompts; check `log\answer-dialogs.log`.
+- **Source path errors:** the harness now resolves the source to an absolute path before passing it to VBA (avoids failures like `Couldn't find .\reauth raw.csv` from a different working context).
+- **Template/VBA drift:** after editing `.bas` files, run `scripts\sync_template.py` and verify compile/run; do not assume the embedded template is current without sync.
+- **Headers not found:** confirm required header names exist in a detectable header row.
 
-## Notes / known issues
-- **Windows + desktop Excel required** (VBA/COM); macros must be enabled. Trust VBA project object model for sync/compile tooling as needed.
-- VBA paths/constants are defined in `modDeclarations.bas` (project-local defaults); update if the project is moved.
-- `scripts/run-report.py` configures HKCU Office 16.0 macro/trusted-location settings for unattended runs and expects `pywin32`.
-- Reports/logs and local debug/temp artifacts are gitignored; screenshots in `documentation/screenshots/` are committed for README review.
-- Do not commit PHI/real patient exports; keep sample data fake.
+---
+
+## Configuration and environment notes
+
+- **Platform:** Windows + desktop Excel required (VBA and COM automation). `scripts\run-report.py` targets Office 16.0 HKCU macro/trusted-location settings for unattended execution.
+- **Project paths:** default `PROJECT_ROOT` and log/marker paths are defined in `modDeclarations.bas`; update them if the project is relocated and re-sync the template.
+- **Macro security:** users must enable macros; maintainers need “Trust access to the VBA project object model” for sync/compile/snapshot tooling.
+- **Git/versioning:** VBA source of truth is `mod*.bas`; `Re-Auth Template.xlsm` is the distributable embedded artifact. Generated reports/logs and local debug/temp files are gitignored.
+
+---
+
+## Validation (latest)
+- `python .\scripts\test-compile.py` → `RESULT: COMPILE OK`, `COMPILE_OK=1`
+- `python .\scripts\run-report.py --source "$PWD\reauth raw.csv"` → `OUTCOME=SUCCESS`, `NEW_REPORT=...\Reports\ReAuth_Report_2026-11-16_1139.xlsx`
+- `python .\scripts\snapshot-report.py --path "Reports\ReAuth_Report_2026-11-16_1139.xlsx"` → exported dashboard, 12 manager tabs, `Unassigned`, and `Raw Data` to `documentation/screenshots/`
+
+## Known limitations / data safety
+- Large exports may increase runtime/memory usage in Excel.
+- Significant schema/header changes require VBA updates.
+- Do **not** commit PHI or real patient exports; keep committed sample data fake (`reauth raw.csv`).
