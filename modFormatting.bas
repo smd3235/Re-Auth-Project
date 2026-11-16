@@ -291,6 +291,7 @@ Public Sub FormatManagerSheet(ByVal ws As Worksheet, ByVal managerName As String
 
     ' Data
     If dataLastRow > headerRow Then
+        Dim repCol As Long, prevRep As String, bandIdx As Long, curRep As String
         With ws.Range(ws.Cells(headerRow + 1, 1), ws.Cells(dataLastRow, lastCol))
             .Font.Name = "Segoe UI"
             .Font.Size = 10
@@ -299,8 +300,25 @@ Public Sub FormatManagerSheet(ByVal ws As Worksheet, ByVal managerName As String
             .VerticalAlignment = xlCenter
             .WrapText = False
         End With
+
+        repCol = 0
+        For c = 1 To lastCol
+            If LCase$(Trim$(CStr(ws.Cells(headerRow, c).Value))) = LCase$(WCC_HEADER) Then
+                repCol = c
+                Exit For
+            End If
+        Next c
+        If repCol = 0 Then repCol = 1
+
+        prevRep = ChrW$(1)
+        bandIdx = -1
         For r = headerRow + 1 To dataLastRow
-            If (r - headerRow) Mod 2 = 0 Then
+            curRep = LCase$(Trim$(CStr(ws.Cells(r, repCol).Value)))
+            If StrComp(curRep, prevRep, vbBinaryCompare) <> 0 Then
+                bandIdx = (bandIdx + 1) Mod 2
+                prevRep = curRep
+            End If
+            If bandIdx = 1 Then
                 ws.Range(ws.Cells(r, 1), ws.Cells(r, lastCol)).Interior.Color = RGB(242, 247, 255)
             Else
                 ws.Range(ws.Cells(r, 1), ws.Cells(r, lastCol)).Interior.Color = RGB(255, 255, 255)

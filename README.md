@@ -6,7 +6,7 @@ Automated Excel/VBA report builder for **weekly pending and upcoming patient re-
 - **Template:** `Re-Auth Template.xlsm` (macro entry: `CreateReAuthReport`, button **CREATE RE-AUTH REPORT** on `START HERE`)
 - **Sample input:** `reauth raw.csv` (fake/sample data only)
 - **Output:** `Reports\ReAuth_Report_YYYY-mm-dd_HHMM.xlsx`
-- **Latest generated sample:** `Reports\ReAuth_Report_2026-11-16_1223.xlsx` (source: `reauth raw.csv`, 145 rows / 12 managers / 15 WCCs, generated 2026-11-16 12:23 PM)
+- **Latest generated sample:** `Reports\ReAuth_Report_2026-11-16_1253.xlsx` (source: `reauth raw.csv`, 145 rows / 12 managers / 15 WCCs, generated 2026-11-16 12:53 PM)
 
 > **GitHub display note:** GitHub renders a repository README in the section **below** the file browser by design. This README is kept at the repo root so the overview and screenshots appear in that rendered section when viewing the repository.
 
@@ -20,7 +20,7 @@ Entry point in `Re-Auth Template.xlsm`: open the template, review the steps, and
 ![START HERE tab](documentation/screenshots/template-start-here.png)
 
 ### Report output (latest sample)
-Report screenshots below were exported from `Reports\ReAuth_Report_2026-11-16_1223.xlsx` using `scripts\snapshot-report.py` (Excel COM `CopyPicture` -> chart export). They reflect the current layout, styling, and sample data.
+Report screenshots below were exported from `Reports\ReAuth_Report_2026-11-16_1253.xlsx` using `scripts\snapshot-report.py` (Excel COM `CopyPicture` -> chart export). They reflect the current layout, styling, and sample data.
 
 ### Dashboard
 KPI summary cards and a manager breakdown table aligned edge-to-edge across columns A:J.
@@ -195,7 +195,7 @@ The macro scans for a header row containing at least:
   10. `Patient/Packet Status`
   11. `Treatment Physician`
 - **Excluded from manager tabs (available in Raw Data):** `Assigned Sales Manager`, `Treatment Physician NPI Number`, `Pending SO Amount`, `Sales Order RX Qty Requested`, `Sales Order RX Qty Approved`, `Authorization Sub Status`, `Initial Authorization Denial Date`, `Authorization Denial Reason`, `Denial Reason Sub List`.
-- **Formatting:** Segoe UI styling, bordered/striped table, date formatting on key fields, status-based highlighting (e.g. Past Due / Upcoming / Denied).
+- **Formatting:** Segoe UI styling, bordered table with alternating row bands by Sales Rep/Wound Care Consultant group (not per-row), date formatting on key fields, status-based highlighting (e.g. Past Due / Upcoming / Denied).
 
 ### 3) Raw Data
 - Contains **all rows** from the source with **all original columns in original order**.
@@ -242,7 +242,7 @@ Examples:
 python .\scripts\snapshot-report.py
 
 # Export from a specific report
-python .\scripts\snapshot-report.py --path "Reports\ReAuth_Report_2026-11-16_1223.xlsx"
+python .\scripts\snapshot-report.py --path "Reports\ReAuth_Report_2026-11-16_1253.xlsx"
 
 # Export specific sheets only
 python .\scripts\snapshot-report.py --sheets Dashboard "Taylor Brooks" "Raw Data"
@@ -293,8 +293,8 @@ python .\scripts\run-report.py --source "$PWD\reauth raw.csv"
 
 ## Validation (latest)
 - `python .\scripts\test-compile.py` → `RESULT: COMPILE OK`, `COMPILE_OK=1`
-- `python .\scripts\run-report.py --source "$PWD\reauth raw.csv"` → `OUTCOME=SUCCESS`, `NEW_REPORT=...\Reports\ReAuth_Report_2026-11-16_1223.xlsx`
-- `python .\scripts\snapshot-report.py --path "Reports\ReAuth_Report_2026-11-16_1223.xlsx"` → exported dashboard, 12 manager tabs, `Unassigned`, and `Raw Data` to `documentation/screenshots/`
+- `python .\scripts\run-report.py --source "$PWD\reauth raw.csv"` → `OUTCOME=SUCCESS`, `NEW_REPORT=...\Reports\ReAuth_Report_2026-11-16_1253.xlsx`
+- `python .\scripts\snapshot-report.py --path "Reports\ReAuth_Report_2026-11-16_1253.xlsx"` → exported dashboard, 12 manager tabs, `Unassigned`, and `Raw Data` to `documentation/screenshots/`
 
 ## Known limitations / data safety
 - Large exports may increase runtime/memory usage in Excel.
