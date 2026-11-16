@@ -69,8 +69,8 @@ End Sub
 Public Function BuildRunLogPath() As String
     Dim logDir As String
     On Error Resume Next
-    logDir = Left$(LOG_PATH, InStrRev(LOG_PATH, "\"))
-    If Len(logDir) = 0 Then logDir = PROJECT_ROOT & "\log\"
+    logDir = GetLogDir()
+    If Len(logDir) = 0 Then logDir = GetProjectRoot() & "\log\"
     BuildRunLogPath = logDir & "reauth_" & Format(Now, "yyyy-mm-dd_HHMMSS") & ".log"
 End Function
 
@@ -94,5 +94,5 @@ Private Sub EnsureDirForFile(ByVal filePath As String)
     On Error Resume Next
     dirPath = Left$(filePath, InStrRev(filePath, "\"))
     If Len(dirPath) = 0 Then Exit Sub
-    If Len(Dir$(dirPath, vbDirectory)) = 0 Then MkDir dirPath
+    EnsureFolderExists dirPath
 End Sub

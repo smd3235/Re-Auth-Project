@@ -226,26 +226,88 @@ End Sub
 
 Public Function BuildOutputPath(ByVal srcWb As Workbook) As String
     Dim reportsDir As String, stamp As String
-    reportsDir = PROJECT_ROOT & "\Reports\"
     On Error Resume Next
-    If Len(Dir$(reportsDir, vbDirectory)) = 0 Then MkDir reportsDir
+    reportsDir = GetReportsDir()
+    If Len(reportsDir) = 0 Then reportsDir = GetProjectRoot() & "\Reports\"
     stamp = Format(Now, "yyyy-mm-dd_HHMM")
     BuildOutputPath = reportsDir & "ReAuth_Report_" & stamp & ".xlsx"
 End Function
 
 Public Sub ApplyUniformColumnWidths(ByVal ws As Worksheet, ByVal firstCol As Long, ByVal lastCol As Long)
-    Dim c As Long, w As Double
+    Dim c As Long, w As Double, fitRow As Long
     On Error Resume Next
+    fitRow = LastUsedRow(ws)
+    If fitRow < 1 Then fitRow = 200
+    If fitRow > 5000 Then fitRow = 5000
     For c = firstCol To lastCol
         ws.Columns(c).ColumnWidth = 18
     Next c
-    ws.Range(ws.Cells(1, firstCol), ws.Cells(ws.Rows.Count, lastCol)).Columns.AutoFit
+    ws.Range(ws.Cells(1, firstCol), ws.Cells(fitRow, lastCol)).Columns.AutoFit
     For c = firstCol To lastCol
         w = ws.Columns(c).ColumnWidth
         If w < 12 Or w = 0 Then w = 12
         If w > 42 Then w = 42
         ws.Columns(c).ColumnWidth = w
     Next c
+End Sub
+
+
+' ----------------------------------------------------------------------------
+' Portable runtime paths (avoid hardcoded machine-specific locations)
+' ----------------------------------------------------------------------------
+Public Function GetProjectRoot() As String
+    On Error Resume Next
+    GetProjectRoot = ThisWorkbook.Path
+    If Len(GetProjectRoot) = 0 Then GetProjectRoot = CurDir$
+    If Len(GetProjectRoot) = 0 Then GetProjectRoot = Environ$("TEMP")
+End Function
+
+Public Function GetLogDir() As String
+    Dim p As String
+    On Error Resume Next
+    p = GetProjectRoot() & "\log\"
+    EnsureFolderExists p
+    GetLogDir = p
+End Function
+
+Public Function GetReportsDir() As String
+    Dim p As String
+    On Error Resume Next
+    p = GetProjectRoot() & "\Reports\"
+    EnsureFolderExists p
+    GetReportsDir = p
+End Function
+
+Public Function LOG_PATH() As String
+    LOG_PATH = GetLogDir() & LOG_FILE_NAME
+End Function
+
+Public Function COMPLETION_MARKER_PATH() As String
+    COMPLETION_MARKER_PATH = GetLogDir() & COMPLETION_MARKER_NAME
+End Function
+
+Public Function AUTO_SOURCE_PATH_FILE() As String
+    AUTO_SOURCE_PATH_FILE = GetLogDir() & AUTO_SOURCE_FILE_NAME
+End Function
+
+Public Function AUTO_SKIP_PRIOR_FILE() As String
+    AUTO_SKIP_PRIOR_FILE = GetLogDir() & AUTO_SKIP_PRIOR_FILE_NAME
+End Function
+
+Public Sub EnsureFolderExists(ByVal folderPath As String)
+    On Error Resume Next
+    If Len(folderPath) = 0 Then Exit Sub
+    If Right$(folderPath, 1) <> "\" Then folderPath = folderPath & "\"
+    If Len(Dir$(folderPath, vbDirectory)) = 0 Then
+        ' try simple MkDir chain for one level deep common case
+        Dim root As String
+        root = Left$(folderPath, Len(folderPath) - 1)
+        root = Left$(root, InStrRev(root, "\"))
+        If Len(root) > 0 Then
+            If Len(Dir$(root, vbDirectory)) = 0 Then MkDir root
+        End If
+        MkDir folderPath
+    End If
 End Sub
 
 Public Function SelectExcelFile(ByVal title As String, ByVal initialDir As String) As Variant

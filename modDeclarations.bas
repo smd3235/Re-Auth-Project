@@ -25,13 +25,12 @@ Public Const MANAGER_HEADER_ROW As Long = 15
 Public Const DASHBOARD_SHEET As String = "Dashboard"
 
 ' ----------------------------------------------------------------------------
-' File / log paths (project-local)
+' File / log paths - resolved at runtime via modUtils (portable across PCs)
 ' ----------------------------------------------------------------------------
-Public Const PROJECT_ROOT As String = "C:\Users\smd32\Downloads\Re-Auth Project"
-Public Const LOG_PATH As String = "C:\Users\smd32\Downloads\Re-Auth Project\log\macro-debug.log"
-Public Const COMPLETION_MARKER_PATH As String = "C:\Users\smd32\Downloads\Re-Auth Project\log\reauth-complete.txt"
-Public Const AUTO_SOURCE_PATH_FILE As String = "C:\Users\smd32\Downloads\Re-Auth Project\log\auto-source.txt"
-Public Const AUTO_SKIP_PRIOR_FILE As String = "C:\Users\smd32\Downloads\Re-Auth Project\log\auto-skip-prior.txt"
+Public Const LOG_FILE_NAME As String = "macro-debug.log"
+Public Const COMPLETION_MARKER_NAME As String = "reauth-complete.txt"
+Public Const AUTO_SOURCE_FILE_NAME As String = "auto-source.txt"
+Public Const AUTO_SKIP_PRIOR_FILE_NAME As String = "auto-skip-prior.txt"
 
 ' ----------------------------------------------------------------------------
 ' Shared runtime state

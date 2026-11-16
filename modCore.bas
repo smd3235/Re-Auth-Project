@@ -284,10 +284,14 @@ CleanExit:
     Exit Function
 
 CleanFail:
-    failMsg = "CreateReAuthReport failed | Err=" & Err.Number & " | " & Err.Description & " | Erl=" & Erl
-    LogMsg failMsg
-    LogErr "CreateReAuthReport"
+    Dim errNum As Long, errDesc As String, errLine As Long
+    errNum = Err.Number
+    errDesc = Err.Description
+    errLine = Erl
+    failMsg = "CreateReAuthReport failed | Err=" & errNum & " | " & errDesc & " | Erl=" & errLine
     On Error Resume Next
+    LogMsg failMsg
+    LogErr "CreateReAuthReport(captured): " & failMsg
     mInReportRun = False
     If Not outWb Is Nothing Then outWb.Close SaveChanges:=False
     If Not sourceWb Is Nothing Then sourceWb.Close SaveChanges:=False
@@ -297,7 +301,10 @@ CleanFail:
     Application.DisplayAlerts = oldAlerts
     Application.Calculation = oldCalc
     WriteCompletionMarker "(failed) " & failMsg
-    MsgBox "Report creation failed: " & Err.Number & " - " & Err.Description, vbCritical
+    MsgBox "Report creation failed." & vbCrLf & vbCrLf & _
+           "Error: " & errNum & " - " & errDesc & vbCrLf & _
+           "Line: " & errLine & vbCrLf & vbCrLf & _
+           "See log\macro-debug.log and log\reauth-complete.txt for details.", vbCritical
     CreateReAuthReport = False
 End Function
 

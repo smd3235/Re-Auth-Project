@@ -6,7 +6,7 @@ Automated Excel/VBA report builder for **weekly pending and upcoming patient re-
 - **Template:** `Re-Auth Template.xlsm` (macro entry: `CreateReAuthReport`, button **CREATE RE-AUTH REPORT** on `START HERE`)
 - **Sample input:** `reauth raw.csv` (fake/sample data only)
 - **Output:** `Reports\ReAuth_Report_YYYY-mm-dd_HHMM.xlsx`
-- **Latest generated sample:** `Reports\ReAuth_Report_2026-11-16_1205.xlsx` (source: `reauth raw.csv`, 145 rows / 12 managers / 15 WCCs, generated 2026-11-16 12:05 PM)
+- **Latest generated sample:** `Reports\ReAuth_Report_2026-11-16_1216.xlsx` (source: `reauth raw.csv`, 145 rows / 12 managers / 15 WCCs, generated 2026-11-16 12:16 PM)
 
 > **GitHub display note:** GitHub renders a repository README in the section **below** the file browser by design. This README is kept at the repo root so the overview and screenshots appear in that rendered section when viewing the repository.
 
@@ -14,7 +14,7 @@ Automated Excel/VBA report builder for **weekly pending and upcoming patient re-
 
 ## Screenshots (clean capture from latest report)
 
-All screenshots below were exported from `Reports\ReAuth_Report_2026-11-16_1205.xlsx` using `scripts\snapshot-report.py` (Excel COM `CopyPicture` → chart export). They reflect the current layout, styling, and sample data.
+All screenshots below were exported from `Reports\ReAuth_Report_2026-11-16_1216.xlsx` using `scripts\snapshot-report.py` (Excel COM `CopyPicture` → chart export). They reflect the current layout, styling, and sample data.
 
 ### Dashboard
 KPI summary cards and a manager breakdown table aligned edge-to-edge across columns A:J.
@@ -167,7 +167,7 @@ The macro scans for a header row containing at least:
 - Styled header banding, frozen header area, and consistent column alignment/widths for edge-to-edge readability.
 
 ### 2) Manager tabs (one per manager + Unassigned)
-- Layout is a single section per tab (one title/summary block and one data table). The formatter clears any split view and reapplies a standard freeze below the header to avoid Excel showing a duplicated/cloned pane.
+- Layout is a single section per tab (one title/summary block and one data table). Split/freeze panes are cleared and left disabled to prevent Excel from showing a duplicated/cloned split view (e.g. A1 highlighted in two panes).
 - **Title block:** `RE-AUTH  |  <MANAGER NAME>`, `Total re-auths: N`, generated timestamp.
 - **Per-rep summary:** merged block **`A5:K9`** labeled `RE-AUTHS BY SALES REP` showing counts per `Wound Care Consultant` within the manager’s records.
 - **Data table:** header at **row 15**, data starts at **row 16**, autofilter enabled, freeze panes at **`A16`**.
@@ -231,7 +231,7 @@ Examples:
 python .\scripts\snapshot-report.py
 
 # Export from a specific report
-python .\scripts\snapshot-report.py --path "Reports\ReAuth_Report_2026-11-16_1205.xlsx"
+python .\scripts\snapshot-report.py --path "Reports\ReAuth_Report_2026-11-16_1216.xlsx"
 
 # Export specific sheets only
 python .\scripts\snapshot-report.py --sheets Dashboard "Taylor Brooks" "Raw Data"
@@ -282,8 +282,8 @@ python .\scripts\run-report.py --source "$PWD\reauth raw.csv"
 
 ## Validation (latest)
 - `python .\scripts\test-compile.py` → `RESULT: COMPILE OK`, `COMPILE_OK=1`
-- `python .\scripts\run-report.py --source "$PWD\reauth raw.csv"` → `OUTCOME=SUCCESS`, `NEW_REPORT=...\Reports\ReAuth_Report_2026-11-16_1205.xlsx`
-- `python .\scripts\snapshot-report.py --path "Reports\ReAuth_Report_2026-11-16_1205.xlsx"` → exported dashboard, 12 manager tabs, `Unassigned`, and `Raw Data` to `documentation/screenshots/`
+- `python .\scripts\run-report.py --source "$PWD\reauth raw.csv"` → `OUTCOME=SUCCESS`, `NEW_REPORT=...\Reports\ReAuth_Report_2026-11-16_1216.xlsx`
+- `python .\scripts\snapshot-report.py --path "Reports\ReAuth_Report_2026-11-16_1216.xlsx"` → exported dashboard, 12 manager tabs, `Unassigned`, and `Raw Data` to `documentation/screenshots/`
 
 ## Known limitations / data safety
 - Large exports may increase runtime/memory usage in Excel.
