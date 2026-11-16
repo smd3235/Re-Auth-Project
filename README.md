@@ -6,7 +6,7 @@ Automated Excel/VBA report builder for **weekly pending and upcoming patient re-
 - **Template:** `Re-Auth Template.xlsm` (macro entry: `CreateReAuthReport`, button **CREATE RE-AUTH REPORT** on `START HERE`)
 - **Sample input:** `reauth raw.csv` (fake/sample data only)
 - **Output:** `Reports\ReAuth_Report_YYYY-mm-dd_HHMM.xlsx`
-- **Latest generated sample:** `Reports\ReAuth_Report_2026-11-16_1216.xlsx` (source: `reauth raw.csv`, 145 rows / 12 managers / 15 WCCs, generated 2026-11-16 12:16 PM)
+- **Latest generated sample:** `Reports\ReAuth_Report_2026-11-16_1223.xlsx` (source: `reauth raw.csv`, 145 rows / 12 managers / 15 WCCs, generated 2026-11-16 12:23 PM)
 
 > **GitHub display note:** GitHub renders a repository README in the section **below** the file browser by design. This README is kept at the repo root so the overview and screenshots appear in that rendered section when viewing the repository.
 
@@ -14,7 +14,7 @@ Automated Excel/VBA report builder for **weekly pending and upcoming patient re-
 
 ## Screenshots (clean capture from latest report)
 
-All screenshots below were exported from `Reports\ReAuth_Report_2026-11-16_1216.xlsx` using `scripts\snapshot-report.py` (Excel COM `CopyPicture` → chart export). They reflect the current layout, styling, and sample data.
+All screenshots below were exported from `Reports\ReAuth_Report_2026-11-16_1223.xlsx` using `scripts\snapshot-report.py` (Excel COM `CopyPicture` → chart export). They reflect the current layout, styling, and sample data.
 
 ### Dashboard
 KPI summary cards and a manager breakdown table aligned edge-to-edge across columns A:J.
@@ -91,12 +91,12 @@ All source rows and all original columns preserved in original order (formatted/
 ## Quick start
 
 ### End users (Excel, Windows)
-1. Place **`Re-Auth Template.xlsm`** in a trusted local folder (e.g. `C:\ReAuth\`) and open it in desktop Microsoft Excel.
-2. **If macros are blocked as “untrusted source”:** close Excel, right-click the `.xlsm` → **Properties** → check **Unblock** → **Apply/OK**, then reopen. PowerShell alternative: `Unblock-File .\Re-Auth Template.xlsm`. If there is no Unblock checkbox, move the file to a **Trusted Location** (Excel → File → Options → Trust Center → Trust Center Settings → Trusted Locations) or ask IT to trust/sign the macro per policy.
+1. Use the latest **`Re-Auth Template.xlsm`** from this repo (macros prebuilt) in a trusted local/writable folder (e.g. `C:\ReAuth\`). `Reports\` and `log\` are created next to the template.
+2. **If macros are blocked as “untrusted source”:** close Excel, right-click the `.xlsm` → **Properties** → check **Unblock** → **Apply/OK**, then reopen. PowerShell alternative: `Unblock-File .\Re-Auth Template.xlsm`. If there is no Unblock checkbox or policy still blocks it, move to a **Trusted Location** or use the **Build locally** steps below (no Python required).
 3. Enable macros/content if prompted.
 4. Go to **`START HERE`** and click **`CREATE RE-AUTH REPORT`**.
 5. Select the raw re-auth file when prompted.
-6. Wait for completion; the report is saved to `Reports\ReAuth_Report_YYYY-mm-dd_HHMM.xlsx`.
+6. Wait for completion; the report is saved to `Reports\ReAuth_Report_YYYY-mm-dd_HHMM.xlsx`. On failure the dialog shows the error/line and log folder; check `log\macro-debug.log` and `log\reauth-complete.txt`.
 
 ### Maintainers (unattended / CLI)
 **Prerequisites:** Windows, desktop Excel (COM), Python 3, `pywin32` (`win32com`). For sync/compile tooling, Excel must allow programmatic access to the VBA project (Trust access to the VBA project object model).
@@ -125,12 +125,13 @@ python .\scripts\view-logs.py
 ### Build locally (avoid "untrusted macros" block)
 If downloading `Re-Auth Template.xlsm` is blocked by Mark-of-the-Web on a work PC, build the macro-enabled workbook **locally** so the saved file is trusted as a local document:
 
-1. Use **`Re-Auth Template (No Macros).xlsx`** (macro-free base, included in repo) or a locally saved copy.
-2. Ensure Excel allows programmatic VBA access (Trust Center → Macro Settings → **Trust access to the VBA project object model**) and macros are permitted per policy.
-3. Run: `python .\scripts\sync_template.py --template "Re-Auth Template (No Macros).xlsx"`  
+1. Copy the project files to a local/trusted folder on that PC (template/base, `mod*.bas`, `scripts/`, `reauth raw.csv` as needed). If Windows blocked them, Unblock the files/folder first (`Unblock-File` or Properties → Unblock).
+2. Use **`Re-Auth Template (No Macros).xlsx`** (macro-free base, included in repo) or a locally saved copy.
+3. Ensure Excel allows programmatic VBA access (Trust Center → Macro Settings → **Trust access to the VBA project object model**) and macros are permitted per policy.
+4. Run: `python .\scripts\sync_template.py --template "Re-Auth Template (No Macros).xlsx"`  
    This imports `mod*.bas`, creates/links the **CREATE RE-AUTH REPORT** button, and saves **`Re-Auth Template.xlsm`** locally.
-4. Or build manually: open the base `.xlsx`, Alt+F11 → Import File for each `mod*.bas`, assign button `btnCreateReAuthReport` → macro `CreateReAuthReport`, save as **Excel Macro-Enabled Workbook (*.xlsm)** in a trusted/local folder.
-5. If `.bas`/ZIP files are also blocked after download, Unblock them first (`Unblock-File`) or copy from a trusted source; strict org policy may still require an IT-trusted location or a signed workbook.
+5. **No Python / manual build:** open `Re-Auth Template (No Macros).xlsx` locally, Alt+F11 → File → **Import File…** and import **all 5** modules — `modCore.bas`, `modDeclarations.bas`, `modFormatting.bas`, `modLogging.bas`, `modUtils.bas` (replace existing modules if prompted). Confirm button `btnCreateReAuthReport` runs `CreateReAuthReport` (`START HERE`), then save as **Excel Macro-Enabled Workbook (*.xlsm)** in a trusted/local writable folder.
+6. **Important:** if you previously imported older `.bas` files and get errors, re-import the latest `mod*.bas` from this repo (paths/logging/error reporting were made portable and more detailed). After a failure, check the `log\` folder next to the template for `macro-debug.log` and `reauth-complete.txt` (the error dialog also shows the log path and error line).
 
 ---
 
@@ -231,7 +232,7 @@ Examples:
 python .\scripts\snapshot-report.py
 
 # Export from a specific report
-python .\scripts\snapshot-report.py --path "Reports\ReAuth_Report_2026-11-16_1216.xlsx"
+python .\scripts\snapshot-report.py --path "Reports\ReAuth_Report_2026-11-16_1223.xlsx"
 
 # Export specific sheets only
 python .\scripts\snapshot-report.py --sheets Dashboard "Taylor Brooks" "Raw Data"
@@ -274,7 +275,7 @@ python .\scripts\run-report.py --source "$PWD\reauth raw.csv"
 ## Configuration and environment notes
 
 - **Platform:** Windows + desktop Excel required (VBA and COM automation). `scripts\run-report.py` targets Office 16.0 HKCU macro/trusted-location settings for unattended execution.
-- **Project paths:** default `PROJECT_ROOT` and log/marker paths are defined in `modDeclarations.bas`; update them if the project is relocated and re-sync the template.
+- **Project paths:** runtime paths are resolved from the template location (`ThisWorkbook.Path`): `Reports\` for output and `log\` for diagnostics/markers are created next to the template/workbook (portable across PCs). Keep the template and its folders in a writable local location.
 - **Macro security:** users must enable macros; maintainers need “Trust access to the VBA project object model” for sync/compile/snapshot tooling.
 - **Git/versioning:** VBA source of truth is `mod*.bas`; `Re-Auth Template.xlsm` is the distributable embedded artifact. Generated reports/logs and local debug/temp files are gitignored.
 
@@ -282,8 +283,8 @@ python .\scripts\run-report.py --source "$PWD\reauth raw.csv"
 
 ## Validation (latest)
 - `python .\scripts\test-compile.py` → `RESULT: COMPILE OK`, `COMPILE_OK=1`
-- `python .\scripts\run-report.py --source "$PWD\reauth raw.csv"` → `OUTCOME=SUCCESS`, `NEW_REPORT=...\Reports\ReAuth_Report_2026-11-16_1216.xlsx`
-- `python .\scripts\snapshot-report.py --path "Reports\ReAuth_Report_2026-11-16_1216.xlsx"` → exported dashboard, 12 manager tabs, `Unassigned`, and `Raw Data` to `documentation/screenshots/`
+- `python .\scripts\run-report.py --source "$PWD\reauth raw.csv"` → `OUTCOME=SUCCESS`, `NEW_REPORT=...\Reports\ReAuth_Report_2026-11-16_1223.xlsx`
+- `python .\scripts\snapshot-report.py --path "Reports\ReAuth_Report_2026-11-16_1223.xlsx"` → exported dashboard, 12 manager tabs, `Unassigned`, and `Raw Data` to `documentation/screenshots/`
 
 ## Known limitations / data safety
 - Large exports may increase runtime/memory usage in Excel.
