@@ -12,9 +12,15 @@ Automated Excel/VBA report builder for **weekly pending and upcoming patient re-
 
 ---
 
-## Screenshots (clean capture from latest report)
+## Screenshots
 
-All screenshots below were exported from `Reports\ReAuth_Report_2026-11-16_1223.xlsx` using `scripts\snapshot-report.py` (Excel COM `CopyPicture` → chart export). They reflect the current layout, styling, and sample data.
+### START HERE (template)
+Entry point in `Re-Auth Template.xlsm`: open the template, review the steps, and click **CREATE RE-AUTH REPORT** to select your raw re-auth export (CSV/Excel). The report is generated and saved to `Reports\` next to the template.
+
+![START HERE tab](documentation/screenshots/template-start-here.png)
+
+### Report output (latest sample)
+Report screenshots below were exported from `Reports\ReAuth_Report_2026-11-16_1223.xlsx` using `scripts\snapshot-report.py` (Excel COM `CopyPicture` -> chart export). They reflect the current layout, styling, and sample data.
 
 ### Dashboard
 KPI summary cards and a manager breakdown table aligned edge-to-edge across columns A:J.
