@@ -75,7 +75,7 @@ Public Function CreateReAuthReport() As Boolean
         LogMsg "AUTO source path: " & CStr(sourcePath)
     Else
         LogMsg "Prompting for source file"
-        sourcePath = SelectExcelFile("Select the Re-Auth raw data file (CSV or Excel)", PROJECT_ROOT)
+        sourcePath = SelectExcelFile("Select the Re-Auth raw data file (CSV or Excel)", GetProjectRoot())
     End If
 
     If VarType(sourcePath) = vbBoolean Then
