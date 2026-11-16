@@ -1,0 +1,23 @@
+﻿# Generated outputs and runtime artifacts
+Reports/*.xlsx
+log/*
+!log/.gitkeep
+
+# Excel/temp/lock/debug artifacts
+~$*
+*.tmp
+_run_temp.xlsm
+_compile_test.xlsm
+_dbg*.xlsm
+_check*.py
+_debug*.py
+_dbg*.py
+_inspect_report.py
+_verify_tpl.py
+_force_sync.py
+_compile.py
+probe_ran.txt
+
+# Python
+__pycache__/
+*.pyc

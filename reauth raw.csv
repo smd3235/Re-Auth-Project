@@ -1,0 +1,146 @@
+Wound Care Consultant,Associate WCC,Re-auth Due Date,HC Company,Patient Name,Patient/Packet Status,Task Required,Auth Start Date,Auth Status,Authorization Status,Authorization Sub Status,Pending SO Amount,Initial Authorization Denial Date,Authorization Denial Reason,Denial Reason Sub List,Sales Order RX Qty Requested,Sales Order RX Qty Approved,Treatment Physician,Treatment Physician NPI Number,Assigned Sales Manager
+Sam Carter,,12/1/2026,Lakeside Health Partners,Charles Martin,Active Claims Case,Rep to Obtain Packet,12/8/2026,Upcoming,Auth Packet Due,,0,,,,,,Dr. Emily Stone,1602632297,Alex Morgan
+Nina Alvarez,Ben Ortiz,12/3/2026,Summit Medical Group,Patricia Williams,Active Claims Case,Pending Review,12/10/2026,Upcoming,Auth Packet Due,,0,,,,16,,Dr. Sofia Perez,1103848421,Jordan Lee
+Evan Brooks,Dylan Price,12/20/2026,Oakwood Health,Barbara Martinez,Active,Rep to Obtain Packet,12/27/2026,Upcoming,In Review,,,,,,20,,Dr. Raj Mehta,1918390409,Taylor Brooks
+Mia Thompson,Dylan Price,12/9/2026,Maple Grove Clinic,Linda Moore,Active,Rep to Obtain Packet,12/16/2026,Upcoming,Submitted,,,,,,20,,Dr. Brian O'Neil,1175452091,Casey Rivera
+Liam Harris,Kara Mills,11/15/2026,Lakeside Health Partners,Jessica Gonzalez,On Hold - Insurance Hold,Pending Review,11/22/2026,Past Due,Auth Packet Due,,9600,,,,20,,Dr. Kevin Wright,1153407200,Morgan Patel
+Olivia Martin,Dylan Price,12/23/2026,Pinecrest Care,Linda Wilson,Active,Rep to Obtain Packet,12/30/2026,Upcoming,Auth Packet Due,,0,,,,16,,Dr. Peter Grant,1068212356,Riley Chen
+Noah Clark,,11/1/2026,Harborview Medical,Elizabeth Wilson,On Hold - Insurance Hold,Pending Review,11/8/2026,Past Due,Auth Packet Due,,0,,,,,,Dr. Laura Kim,1487182120,Avery Johnson
+Emma Lewis,Dylan Price,12/18/2026,Maple Grove Clinic,Richard Thomas,Active,Awaiting Documentation,12/25/2026,Upcoming,Submitted,,9600,,,,16,,Dr. Emily Stone,1120117054,Jamie Torres
+Ava Walker,Dylan Price,11/2/2026,Oakwood Health,Jessica Moore,Active Claims Case,Awaiting Documentation,11/9/2026,Past Due,Auth Packet Due,,0,,,,,,Dr. Laura Kim,1284602384,Drew Sullivan
+Lucas Hall,Kara Mills,11/28/2026,Harborview Medical,Richard Smith,Active Claims Case,Rep to Obtain Appeal,12/5/2026,Upcoming,In Review,,0,,,,20,20,Dr. Peter Grant,1594768704,Parker Nguyen
+Sophia Young,,11/30/2026,Cedar Valley Services,Michael Jackson,Active Claims Case,Rep to Obtain Packet,12/7/2026,Upcoming,Auth Packet Due,,4400,,,,,,Dr. Peter Grant,1507526654,Cameron Diaz
+James King,Ben Ortiz,11/8/2026,Sunrise Home Health,Joseph Hernandez,Active,Rep to Obtain Packet,11/15/2026,Past Due,In Review,,,,,,,,Dr. Raj Mehta,1266992705,Skyler Reed
+Isabella Wright,Jonny Rodene,10/26/2026,Lakeside Health Partners,Linda Wilson,Active,Rep to Obtain Packet,11/2/2026,Past Due,Auth Packet Due,,,,,,,20,Dr. Kevin Wright,1516854671,Alex Morgan
+Henry Scott,,12/10/2026,Seaside Medical,Sarah Johnson,On Hold – Medical,Rep to Obtain Packet,12/17/2026,Upcoming,In Review,,0,,,,24,16,Dr. Marcus Lee,1061380746,Jordan Lee
+Grace Adams,Jonny Rodene,11/21/2026,Maple Grove Clinic,Robert Wilson,Active,Pending Review,11/28/2026,Upcoming (C),Auth Packet Due,,9600,,,,16,20,Dr. Peter Grant,1606907788,Taylor Brooks
+Sam Carter,Kara Mills,12/1/2026,Harborview Medical,Robert Moore,On Hold – Medical,Rep to Obtain Packet,12/8/2026,Upcoming,Auth Packet Due,,9600,,,,20,,Dr. Brian O'Neil,1543189555,Casey Rivera
+Nina Alvarez,,11/26/2026,Pinecrest Care,David Brown,Active,Rep to Obtain Packet,12/3/2026,Upcoming,Submitted,,19200,,,,,,Dr. Raj Mehta,1797163846,Morgan Patel
+Evan Brooks,Kara Mills,11/6/2026,Sunrise Home Health,Richard Jones,Active,Pending Review,11/13/2026,Past Due,In Review,,,,,,,16,Dr. Hannah Brooks,1173497327,Riley Chen
+Mia Thompson,Ben Ortiz,10/1/2026,Evergreen Wound Clinic,Jennifer Johnson,Active,Awaiting Documentation,10/8/2026,Past Due,Auth Packet Due,,0,,,,20,,Dr. Marcus Lee,1225567963,Avery Johnson
+Liam Harris,Rosa Kim,12/7/2026,Ridgeway Home Care,John Garcia,Active Claims Case,Rep to Obtain Appeal,12/14/2026,Denied,Auth Packet Denied,Needs Appeal,,11/30/2026,Not Medically Necessary,,16,0,Dr. Marcus Lee,1840081098,Jamie Torres
+Olivia Martin,Kara Mills,11/10/2026,Sunrise Home Health,William Gonzalez,Active Claims Case,Rep to Obtain Packet,11/17/2026,Past Due,Auth Packet Due,,0,,,,16,16,Dr. Marcus Lee,1299147754,Drew Sullivan
+Noah Clark,Dylan Price,12/11/2026,Sunrise Home Health,Patricia Martin,On Hold - Insurance Hold,Rep to Obtain Packet,12/18/2026,Upcoming,Submitted,,9600,,,,,,Dr. Sofia Perez,1371178705,Parker Nguyen
+Emma Lewis,,11/15/2026,Summit Medical Group,Susan Williams,Active Claims Case,Rep to Obtain Appeal,11/22/2026,Denied,Auth Packet Denied,Needs Appeal,9600,11/11/2026,Incomplete Documentation,Photo Missing,,0,Dr. Marcus Lee,1669108025,Cameron Diaz
+Ava Walker,Dylan Price,10/23/2026,Maple Grove Clinic,Christopher Martinez,Active Claims Case,Rep to Obtain Packet,10/30/2026,Past Due,Submitted,,,,,,16,16,Dr. Sofia Perez,1588343096,Skyler Reed
+Lucas Hall,Kara Mills,12/24/2026,Oakwood Health,Robert Martinez,Active Claims Case,Rep to Obtain Packet,12/31/2026,Upcoming,In Review,,,,,,16,,Dr. Dana Ross,1712807629,Alex Morgan
+Sophia Young,Kara Mills,10/9/2026,Ridgeway Home Care,Christopher Miller,On Hold - No Renewal PO,Rep to Obtain Packet,10/16/2026,Past Due,Auth Packet Due,,,,,,24,,Dr. Sofia Perez,1530833445,Jordan Lee
+James King,,11/30/2026,Maple Grove Clinic,Richard Anderson,On Hold – Medical,Rep to Obtain Packet,12/7/2026,Upcoming,In Review,,,,,,,16,Dr. Peter Grant,1875106572,Taylor Brooks
+Isabella Wright,Tara Singh,12/16/2026,Evergreen Wound Clinic,Thomas Williams,Active Claims Case,Rep to Obtain Packet,12/23/2026,Upcoming,Auth Packet Due,,19200,,,,20,,Dr. Hannah Brooks,1251785565,Casey Rivera
+Henry Scott,,10/21/2026,Ridgeway Home Care,Christopher Smith,On Hold - No Renewal PO,Rep to Obtain Packet,10/28/2026,Past Due,Auth Packet Due,Needs Appeal,0,,,,20,,Dr. Peter Grant,1408431021,Morgan Patel
+Grace Adams,Dylan Price,11/15/2026,Blue River Health,John Gonzalez,On Hold - No Renewal PO,Rep to Obtain Appeal,11/22/2026,Denied,Auth Packet Denied,Needs Appeal,0,11/8/2026,Not Medically Necessary,,16,0,Dr. Marcus Lee,1718197581,Riley Chen
+Sam Carter,Jonny Rodene,11/25/2026,Blue River Health,Linda Johnson,Active Claims Case,Rep to Obtain Appeal,12/2/2026,Denied,Auth Packet Denied,Needs Appeal,4400,11/15/2026,Not Medically Necessary,Photo Missing,,0,Dr. Hannah Brooks,1407059676,Avery Johnson
+Nina Alvarez,Rosa Kim,10/23/2026,Oakwood Health,Mary Smith,Active,Rep to Obtain Packet,10/30/2026,Past Due,Auth Packet Due,,19200,,,,,,Dr. Brian O'Neil,1214061901,Jamie Torres
+Evan Brooks,Kara Mills,11/23/2026,Pinecrest Care,Elizabeth Brown,Active,Rep to Obtain Packet,11/30/2026,Upcoming,Auth Packet Due,,9600,,,,20,,Dr. Peter Grant,1027571992,Drew Sullivan
+Mia Thompson,,11/16/2026,Oakwood Health,Karen Brown,On Hold - Insurance Hold,Rep to Obtain Appeal,11/23/2026,Denied,Auth Packet Denied,Needs Appeal,,11/12/2026,Missing Weekly Measurements,Missing Weekly Measurements,,0,Dr. Peter Grant,1840348305,Parker Nguyen
+Liam Harris,Rosa Kim,12/7/2026,Seaside Medical,Michael Wilson,On Hold - No Renewal PO,Rep to Obtain Packet,12/14/2026,Upcoming,In Review,,,,,,,16,Dr. Laura Kim,1787906704,Cameron Diaz
+Olivia Martin,Tara Singh,12/23/2026,Maple Grove Clinic,Joseph Hernandez,On Hold – Medical,Rep to Obtain Packet,12/30/2026,Upcoming,Auth Packet Due,,4400,,,,,16,Dr. Emily Stone,1530757561,Skyler Reed
+Noah Clark,,12/7/2026,Seaside Medical,Jessica Thomas,Active Claims Case,Rep to Obtain Packet,12/14/2026,Upcoming,Submitted,,9600,,,,16,20,Dr. Kevin Wright,1851405188,Alex Morgan
+Emma Lewis,Ben Ortiz,11/8/2026,Evergreen Wound Clinic,Elizabeth Rodriguez,On Hold - No Renewal PO,Rep to Obtain Packet,11/15/2026,Past Due,In Review,,0,,,,20,20,Dr. Brian O'Neil,1129553265,Jordan Lee
+Ava Walker,Jonny Rodene,10/27/2026,Pinecrest Care,David Johnson,On Hold – Medical,Rep to Obtain Packet,11/3/2026,Past Due,Submitted,,0,,,,16,16,Dr. Emily Stone,1594164665,Taylor Brooks
+Lucas Hall,,10/10/2026,Blue River Health,Patricia Williams,On Hold - Insurance Hold,Rep to Obtain Appeal,10/17/2026,Denied,Auth Packet Denied,Needs Appeal,0,9/30/2026,Incomplete Documentation,Photo Missing,20,0,Dr. Sofia Perez,1528008852,Casey Rivera
+Sophia Young,,11/2/2026,Lakeside Health Partners,Charles Gonzalez,On Hold – Medical,Awaiting Documentation,11/9/2026,Past Due,Auth Packet Due,,9600,,,,,,Dr. Kevin Wright,1975499151,Morgan Patel
+James King,,11/19/2026,Lakeside Health Partners,Linda Moore,Active Claims Case,Rep to Obtain Packet,11/26/2026,Upcoming,Auth Packet Due,,0,,,,16,,Dr. Raj Mehta,1168075622,Riley Chen
+Isabella Wright,Tara Singh,10/15/2026,Ridgeway Home Care,Patricia Moore,Active Claims Case,Rep to Obtain Appeal,10/22/2026,Past Due,In Review,,,,,,20,,Dr. Brian O'Neil,1695392488,Avery Johnson
+Henry Scott,Jonny Rodene,10/16/2026,Cedar Valley Services,Sarah Thomas,On Hold - Insurance Hold,Rep to Obtain Packet,10/23/2026,Past Due,Submitted,,,,,,24,,Dr. Kevin Wright,1086373782,Jamie Torres
+Grace Adams,Rosa Kim,10/2/2026,Blue River Health,Charles Anderson,Active Claims Case,Rep to Obtain Packet,10/9/2026,Past Due,Auth Packet Due,,,,,,20,,Dr. Hannah Brooks,1194872482,Drew Sullivan
+Sam Carter,Tara Singh,12/12/2026,Sunrise Home Health,Thomas Williams,On Hold – Medical,Rep to Obtain Packet,12/19/2026,Upcoming,Auth Packet Due,,4400,,,,20,16,Dr. Marcus Lee,1271011200,Parker Nguyen
+Nina Alvarez,,12/1/2026,Summit Medical Group,Karen Thomas,On Hold – Medical,Rep to Obtain Appeal,12/8/2026,Denied,Auth Packet Denied,Needs Appeal,0,11/30/2026,Not Medically Necessary,,24,0,Dr. Kevin Wright,1816033628,Cameron Diaz
+Evan Brooks,Jonny Rodene,12/17/2026,Harborview Medical,Thomas Brown,Active Claims Case,Rep to Obtain Packet,12/24/2026,Upcoming,Auth Packet Due,,0,,,,20,,Dr. Laura Kim,1535126623,Skyler Reed
+Mia Thompson,Dylan Price,11/19/2026,Seaside Medical,Michael Williams,On Hold – Medical,Rep to Obtain Appeal,11/26/2026,Denied,Auth Packet Denied,Needs Appeal,9600,11/11/2026,Missing Weekly Measurements,Missing Weekly Measurements,24,0,Dr. Hannah Brooks,1829653607,Alex Morgan
+Liam Harris,Dylan Price,10/16/2026,Ridgeway Home Care,Thomas Hernandez,On Hold – Medical,Pending Review,10/23/2026,Past Due,In Review,,9600,,,,24,,Dr. Brian O'Neil,1748933239,Jordan Lee
+Olivia Martin,Ben Ortiz,10/27/2026,Harborview Medical,Thomas Brown,On Hold - Insurance Hold,Rep to Obtain Appeal,11/3/2026,Past Due,In Review,,9600,,,,16,,Dr. Dana Ross,1977579311,Taylor Brooks
+Noah Clark,Ben Ortiz,11/20/2026,Ridgeway Home Care,Richard Thomas,On Hold – Medical,Rep to Obtain Packet,11/27/2026,Upcoming (C),Submitted,,,,,,24,,Dr. Dana Ross,1038546365,Casey Rivera
+Emma Lewis,Dylan Price,12/13/2026,Summit Medical Group,Jennifer Wilson,On Hold - Insurance Hold,Awaiting Documentation,12/20/2026,Upcoming,Auth Packet Due,,0,,,,20,,Dr. Laura Kim,1262204999,Morgan Patel
+Ava Walker,Jonny Rodene,11/5/2026,Blue River Health,Elizabeth Moore,Active,Pending Review,11/12/2026,Past Due,Auth Packet Due,,0,,,,16,20,Dr. Laura Kim,1079308612,Riley Chen
+Lucas Hall,,12/2/2026,Seaside Medical,Elizabeth Smith,On Hold - Insurance Hold,Rep to Obtain Packet,12/9/2026,Upcoming (C),Submitted,Needs Appeal,9600,,,,24,16,Dr. Sofia Perez,1294721069,Avery Johnson
+Sophia Young,,12/4/2026,Oakwood Health,Patricia Johnson,Active Claims Case,Pending Review,12/11/2026,Upcoming,Auth Packet Due,,,,,,20,,Dr. Hannah Brooks,1846764061,Jamie Torres
+James King,Jonny Rodene,10/8/2026,Cedar Valley Services,Charles Rodriguez,On Hold - Insurance Hold,Rep to Obtain Appeal,10/15/2026,Denied,Auth Packet Denied,Needs Appeal,,10/2/2026,Not Medically Necessary,Missing Weekly Measurements,16,0,Dr. Laura Kim,1275919523,Drew Sullivan
+Isabella Wright,Dylan Price,11/9/2026,Summit Medical Group,Robert Gonzalez,On Hold – Medical,Rep to Obtain Appeal,11/16/2026,Denied,Auth Packet Denied,Needs Appeal,,11/1/2026,Missing Weekly Measurements,Missing Weekly Measurements,24,0,Dr. Emily Stone,1283960237,Parker Nguyen
+Henry Scott,Dylan Price,12/26/2026,Oakwood Health,Robert Anderson,Active Claims Case,Awaiting Documentation,1/2/2027,Upcoming,Auth Packet Due,,9600,,,,24,20,Dr. Hannah Brooks,1697115550,Cameron Diaz
+Grace Adams,,11/23/2026,Ridgeway Home Care,Christopher Jones,On Hold – Medical,Rep to Obtain Packet,11/30/2026,Upcoming (C),Auth Packet Due,,,,,,20,,Dr. Sofia Perez,1703217037,Skyler Reed
+Sam Carter,Ben Ortiz,10/20/2026,Sunrise Home Health,Joseph Rodriguez,On Hold - Insurance Hold,Rep to Obtain Packet,10/27/2026,Past Due,In Review,,19200,,,,20,20,Dr. Brian O'Neil,1131167999,Alex Morgan
+Nina Alvarez,,11/6/2026,Harborview Medical,Sarah Miller,Active Claims Case,Rep to Obtain Packet,11/13/2026,Past Due,Auth Packet Due,,,,,,16,,Dr. Peter Grant,1231875999,Jordan Lee
+Evan Brooks,Jonny Rodene,10/6/2026,Lakeside Health Partners,Christopher Hernandez,On Hold - Insurance Hold,Awaiting Documentation,10/13/2026,Past Due,Submitted,,0,,,,,,Dr. Emily Stone,1187095435,Taylor Brooks
+Mia Thompson,Ben Ortiz,10/1/2026,Seaside Medical,Charles Martinez,Active,Rep to Obtain Packet,10/8/2026,Past Due,Submitted,,,,,,,,Dr. Kevin Wright,1690781796,Casey Rivera
+Liam Harris,Tara Singh,11/22/2026,Oakwood Health,Christopher Moore,On Hold – Medical,Rep to Obtain Packet,11/29/2026,Upcoming,In Review,,0,,,,20,,Dr. Marcus Lee,1408992977,Morgan Patel
+Olivia Martin,Tara Singh,11/22/2026,Ridgeway Home Care,Patricia Hernandez,On Hold - No Renewal PO,Pending Review,11/29/2026,Upcoming,Auth Packet Due,,4400,,,,16,,Dr. Sofia Perez,1335569630,Riley Chen
+Noah Clark,Jonny Rodene,12/23/2026,Pinecrest Care,Sarah Johnson,On Hold - Insurance Hold,Rep to Obtain Appeal,12/30/2026,Denied,Auth Packet Denied,Needs Appeal,19200,12/21/2026,Missing Weekly Measurements,,,0,Dr. Peter Grant,1602998820,Avery Johnson
+Emma Lewis,Ben Ortiz,11/11/2026,Lakeside Health Partners,Michael Thomas,On Hold – Medical,Rep to Obtain Appeal,11/18/2026,Denied,Auth Packet Denied,Needs Appeal,9600,11/4/2026,Not Medically Necessary,Photo Missing,20,0,Dr. Brian O'Neil,1909754443,Jamie Torres
+Ava Walker,Rosa Kim,12/22/2026,Sunrise Home Health,Linda Rodriguez,On Hold - Insurance Hold,Rep to Obtain Packet,12/29/2026,Upcoming,In Review,,,,,,,,Dr. Hannah Brooks,1989493377,Drew Sullivan
+Lucas Hall,Jonny Rodene,11/20/2026,Seaside Medical,Richard Jackson,On Hold - Insurance Hold,Rep to Obtain Packet,11/27/2026,Upcoming,Auth Packet Due,Missing Signature,0,,,,16,16,Dr. Peter Grant,1091221925,Parker Nguyen
+Sophia Young,,10/25/2026,Evergreen Wound Clinic,Christopher Thomas,Active,Rep to Obtain Packet,11/1/2026,Past Due,In Review,,4400,,,,24,20,Dr. Dana Ross,1716328133,Cameron Diaz
+James King,,10/10/2026,Cedar Valley Services,Barbara Taylor,On Hold - No Renewal PO,Pending Review,10/17/2026,Past Due,Submitted,,0,,,,,20,Dr. Dana Ross,1894807263,Skyler Reed
+Isabella Wright,Ben Ortiz,12/15/2026,Sunrise Home Health,Richard Garcia,On Hold - No Renewal PO,Awaiting Documentation,12/22/2026,Upcoming,Submitted,,0,,,,24,,Dr. Peter Grant,1494025283,Alex Morgan
+Henry Scott,,11/21/2026,Lakeside Health Partners,Richard Garcia,On Hold - Insurance Hold,Rep to Obtain Appeal,11/28/2026,Denied,Auth Packet Denied,Needs Appeal,,11/17/2026,Incomplete Documentation,Missing Weekly Measurements,24,0,Dr. Raj Mehta,1548127255,Jordan Lee
+Grace Adams,Kara Mills,11/25/2026,Pinecrest Care,Jessica Anderson,Active,Rep to Obtain Packet,12/2/2026,Upcoming,Auth Packet Due,,,,,,16,,Dr. Peter Grant,1815911873,Taylor Brooks
+Sam Carter,Rosa Kim,10/25/2026,Blue River Health,Thomas Johnson,On Hold - Insurance Hold,Rep to Obtain Packet,11/1/2026,Past Due,In Review,,0,,,,20,,Dr. Emily Stone,1395928981,Casey Rivera
+Nina Alvarez,,12/10/2026,Harborview Medical,Richard Williams,On Hold - No Renewal PO,Rep to Obtain Packet,12/17/2026,Upcoming,Auth Packet Due,,0,,,,16,16,Dr. Dana Ross,1693773681,Morgan Patel
+Evan Brooks,Tara Singh,12/25/2026,Oakwood Health,Richard Williams,Active,Rep to Obtain Packet,1/1/2027,Upcoming,Submitted,,,,,,24,16,Dr. Marcus Lee,1101474984,Riley Chen
+Mia Thompson,Dylan Price,12/24/2026,Pinecrest Care,Karen Williams,On Hold - No Renewal PO,Pending Review,12/31/2026,Upcoming (C),Submitted,,,,,,20,20,Dr. Hannah Brooks,1600138002,Avery Johnson
+Liam Harris,,12/19/2026,Blue River Health,William Davis,On Hold - Insurance Hold,Rep to Obtain Packet,12/26/2026,Upcoming,In Review,,,,,,,,Dr. Laura Kim,1166371119,Jamie Torres
+Olivia Martin,,12/19/2026,Pinecrest Care,Thomas Johnson,On Hold – Medical,Rep to Obtain Packet,12/26/2026,Upcoming,Submitted,,0,,,,16,,Dr. Sofia Perez,1391163514,Drew Sullivan
+Noah Clark,Tara Singh,11/13/2026,Summit Medical Group,Christopher Anderson,Active Claims Case,Pending Review,11/20/2026,Past Due,Auth Packet Due,,,,,,20,,Dr. Kevin Wright,1826178355,Parker Nguyen
+Emma Lewis,Ben Ortiz,10/17/2026,Cedar Valley Services,Patricia Taylor,On Hold - Insurance Hold,Rep to Obtain Appeal,10/24/2026,Denied,Auth Packet Denied,Needs Appeal,,10/7/2026,Missing Weekly Measurements,,,0,Dr. Raj Mehta,1306084084,Cameron Diaz
+Ava Walker,Tara Singh,10/24/2026,Summit Medical Group,Barbara Gonzalez,On Hold – Medical,Rep to Obtain Packet,10/31/2026,Past Due,Auth Packet Due,,4400,,,,20,,Dr. Raj Mehta,1402559419,Skyler Reed
+Lucas Hall,,10/6/2026,Blue River Health,Karen Smith,On Hold - No Renewal PO,Rep to Obtain Packet,10/13/2026,Past Due,Submitted,,19200,,,,24,,Dr. Raj Mehta,1020405269,Alex Morgan
+Sophia Young,,12/1/2026,Maple Grove Clinic,Barbara Jones,On Hold – Medical,Rep to Obtain Packet,12/8/2026,Upcoming,Auth Packet Due,,0,,,,24,16,Dr. Hannah Brooks,1460891752,Jordan Lee
+James King,Ben Ortiz,11/21/2026,Evergreen Wound Clinic,John Lopez,On Hold - Insurance Hold,Rep to Obtain Packet,11/28/2026,Upcoming,Submitted,Missing Signature,4400,,,,,16,Dr. Raj Mehta,1370228863,Taylor Brooks
+Isabella Wright,,12/7/2026,Oakwood Health,Linda Jones,On Hold - No Renewal PO,Rep to Obtain Packet,12/14/2026,Upcoming,Submitted,,,,,,16,,Dr. Raj Mehta,1768847524,Casey Rivera
+Henry Scott,Dylan Price,10/9/2026,Oakwood Health,William Martinez,Active,Pending Review,10/16/2026,Past Due,Submitted,,0,,,,24,,Dr. Marcus Lee,1925714196,Morgan Patel
+Grace Adams,Rosa Kim,10/20/2026,Cedar Valley Services,David Williams,On Hold - Insurance Hold,Rep to Obtain Packet,10/27/2026,Past Due,In Review,,4400,,,,24,,Dr. Sofia Perez,1084747224,Riley Chen
+Sam Carter,Jonny Rodene,10/3/2026,Maple Grove Clinic,Susan Rodriguez,On Hold - Insurance Hold,Rep to Obtain Packet,10/10/2026,Past Due,Submitted,,0,,,,24,16,Dr. Emily Stone,1080574838,Avery Johnson
+Nina Alvarez,Jonny Rodene,11/4/2026,Sunrise Home Health,Karen Jones,On Hold – Medical,Rep to Obtain Packet,11/11/2026,Past Due,In Review,,4400,,,,16,,Dr. Kevin Wright,1398320110,Jamie Torres
+Evan Brooks,Jonny Rodene,12/6/2026,Harborview Medical,David Rodriguez,On Hold – Medical,Rep to Obtain Packet,12/13/2026,Upcoming,Auth Packet Due,,4400,,,,,,Dr. Kevin Wright,1230393232,Drew Sullivan
+Mia Thompson,Tara Singh,10/1/2026,Cedar Valley Services,Elizabeth Martinez,On Hold – Medical,Rep to Obtain Packet,10/8/2026,Past Due,In Review,,,,,,20,,Dr. Laura Kim,1764299201,Parker Nguyen
+Liam Harris,Jonny Rodene,11/23/2026,Pinecrest Care,Karen Williams,On Hold – Medical,Awaiting Documentation,11/30/2026,Upcoming,Auth Packet Due,,4400,,,,24,20,Dr. Raj Mehta,1332098383,Cameron Diaz
+Olivia Martin,Tara Singh,12/12/2026,Oakwood Health,Christopher Garcia,On Hold – Medical,Pending Review,12/19/2026,Upcoming,Auth Packet Due,,0,,,,,20,Dr. Laura Kim,1464520346,Skyler Reed
+Noah Clark,,10/7/2026,Evergreen Wound Clinic,Michael Martinez,On Hold – Medical,Rep to Obtain Packet,10/14/2026,Past Due,Auth Packet Due,,19200,,,,20,,Dr. Peter Grant,1572817675,Alex Morgan
+Emma Lewis,Jonny Rodene,12/24/2026,Oakwood Health,William Jackson,On Hold - Insurance Hold,Rep to Obtain Packet,12/31/2026,Upcoming,Auth Packet Due,,,,,,,20,Dr. Sofia Perez,1663688866,Jordan Lee
+Ava Walker,Dylan Price,12/16/2026,Blue River Health,William Hernandez,On Hold - No Renewal PO,Rep to Obtain Packet,12/23/2026,Upcoming (C),In Review,,4400,,,,,,Dr. Peter Grant,1154263081,Taylor Brooks
+Lucas Hall,Rosa Kim,10/20/2026,Evergreen Wound Clinic,Joseph Martin,Active,Rep to Obtain Packet,10/27/2026,Past Due,Auth Packet Due,,0,,,,24,16,Dr. Sofia Perez,1266578178,Casey Rivera
+Sophia Young,Rosa Kim,11/28/2026,Cedar Valley Services,Thomas Davis,On Hold - No Renewal PO,Pending Review,12/5/2026,Upcoming,In Review,,0,,,,24,16,Dr. Brian O'Neil,1626360971,Morgan Patel
+James King,Tara Singh,12/12/2026,Ridgeway Home Care,Jennifer Johnson,On Hold - Insurance Hold,Rep to Obtain Appeal,12/19/2026,Denied,Auth Packet Denied,Needs Appeal,0,12/4/2026,Incomplete Documentation,Missing Weekly Measurements,24,0,Dr. Sofia Perez,1054930149,Riley Chen
+Isabella Wright,Dylan Price,12/14/2026,Summit Medical Group,Michael Miller,On Hold – Medical,Pending Review,12/21/2026,Upcoming,Submitted,,,,,,,,Dr. Peter Grant,1546666136,Avery Johnson
+Henry Scott,,12/16/2026,Seaside Medical,Elizabeth Jackson,On Hold – Medical,Rep to Obtain Packet,12/23/2026,Upcoming,Auth Packet Due,,4400,,,,16,20,Dr. Marcus Lee,1544725317,Jamie Torres
+Grace Adams,Dylan Price,11/26/2026,Maple Grove Clinic,Jessica Rodriguez,Active,Rep to Obtain Appeal,12/3/2026,Denied,Auth Packet Denied,Needs Appeal,,11/20/2026,Incomplete Documentation,Photo Missing,20,0,Dr. Peter Grant,1620230209,Drew Sullivan
+Sam Carter,Tara Singh,12/25/2026,Sunrise Home Health,Thomas Hernandez,Active Claims Case,Pending Review,1/1/2027,Upcoming,In Review,,,,,,,,Dr. Sofia Perez,1162598077,Parker Nguyen
+Nina Alvarez,Tara Singh,12/19/2026,Cedar Valley Services,Richard Moore,On Hold - No Renewal PO,Rep to Obtain Packet,12/26/2026,Upcoming,Submitted,,0,,,,24,,Dr. Marcus Lee,1725708356,Cameron Diaz
+Evan Brooks,Dylan Price,12/1/2026,Summit Medical Group,Jessica Lopez,On Hold - No Renewal PO,Rep to Obtain Packet,12/8/2026,Upcoming,Submitted,,,,,,20,,Dr. Dana Ross,1854059995,Skyler Reed
+Mia Thompson,Ben Ortiz,11/16/2026,Seaside Medical,Jessica Miller,On Hold - Insurance Hold,Rep to Obtain Appeal,11/23/2026,Denied,Auth Packet Denied,Needs Appeal,,11/13/2026,Incomplete Documentation,Missing Weekly Measurements,20,0,Dr. Brian O'Neil,1889006374,Alex Morgan
+Liam Harris,Dylan Price,11/13/2026,Seaside Medical,Jessica Brown,On Hold - Insurance Hold,Rep to Obtain Packet,11/20/2026,Past Due,Auth Packet Due,Missing Signature,4400,,,,16,,Dr. Laura Kim,1005563528,Jordan Lee
+Olivia Martin,Jonny Rodene,12/16/2026,Lakeside Health Partners,Sarah Johnson,On Hold – Medical,Rep to Obtain Packet,12/23/2026,Upcoming,Auth Packet Due,,0,,,,20,20,Dr. Laura Kim,1448700579,Taylor Brooks
+Noah Clark,,11/27/2026,Blue River Health,Sarah Taylor,On Hold - Insurance Hold,Awaiting Documentation,12/4/2026,Upcoming,Submitted,,0,,,,,20,Dr. Kevin Wright,1954835612,Casey Rivera
+Emma Lewis,Tara Singh,10/4/2026,Oakwood Health,William Garcia,On Hold – Medical,Rep to Obtain Packet,10/11/2026,Past Due,In Review,,,,,,16,16,Dr. Peter Grant,1919280306,Morgan Patel
+Ava Walker,Ben Ortiz,10/22/2026,Blue River Health,David Hernandez,Active Claims Case,Rep to Obtain Packet,10/29/2026,Past Due,Auth Packet Due,,,,,,24,,Dr. Hannah Brooks,1625412469,Riley Chen
+Lucas Hall,Rosa Kim,11/8/2026,Summit Medical Group,Karen Davis,On Hold - Insurance Hold,Rep to Obtain Packet,11/15/2026,Past Due,Submitted,Missing Signature,,,,,20,,Dr. Brian O'Neil,1143418388,Avery Johnson
+Sophia Young,Rosa Kim,12/16/2026,Maple Grove Clinic,Patricia Johnson,Active,Pending Review,12/23/2026,Upcoming,Auth Packet Due,,0,,,,,,Dr. Dana Ross,1969468776,Jamie Torres
+James King,,10/30/2026,Pinecrest Care,Charles Wilson,On Hold - No Renewal PO,Rep to Obtain Packet,11/6/2026,Past Due,Auth Packet Due,,0,,,,24,20,Dr. Kevin Wright,1605495031,Drew Sullivan
+Isabella Wright,Dylan Price,11/16/2026,Sunrise Home Health,Elizabeth Wilson,On Hold - No Renewal PO,Rep to Obtain Appeal,11/23/2026,Upcoming,Auth Packet Due,,0,,,,,,Dr. Laura Kim,1825677464,Parker Nguyen
+Henry Scott,,12/10/2026,Ridgeway Home Care,Charles Jones,On Hold – Medical,Rep to Obtain Packet,12/17/2026,Upcoming (C),In Review,,,,,,16,,Dr. Brian O'Neil,1896382881,Cameron Diaz
+Grace Adams,Dylan Price,12/20/2026,Sunrise Home Health,Susan Martin,Active,Rep to Obtain Packet,12/27/2026,Upcoming,In Review,,19200,,,,16,,Dr. Emily Stone,1258413465,Skyler Reed
+Sam Carter,,11/19/2026,Pinecrest Care,Charles Martinez,Active,Rep to Obtain Packet,11/26/2026,Upcoming,Auth Packet Due,,,,,,16,,Dr. Brian O'Neil,1875943821,Alex Morgan
+Nina Alvarez,Rosa Kim,10/6/2026,Oakwood Health,Susan Moore,Active Claims Case,Awaiting Documentation,10/13/2026,Past Due,Auth Packet Due,,,,,,20,20,Dr. Kevin Wright,1050341410,Jordan Lee
+Evan Brooks,Ben Ortiz,10/23/2026,Blue River Health,Mary Moore,Active Claims Case,Rep to Obtain Packet,10/30/2026,Past Due,Submitted,,19200,,,,24,,Dr. Sofia Perez,1447221915,Taylor Brooks
+Mia Thompson,Kara Mills,11/7/2026,Evergreen Wound Clinic,Joseph Martin,Active,Rep to Obtain Packet,11/14/2026,Past Due,In Review,,,,,,,,Dr. Peter Grant,1042463863,Casey Rivera
+Liam Harris,Kara Mills,10/18/2026,Seaside Medical,Karen Miller,Active Claims Case,Rep to Obtain Packet,10/25/2026,Past Due,Auth Packet Due,,4400,,,,16,,Dr. Sofia Perez,1982609552,Morgan Patel
+Olivia Martin,Dylan Price,12/8/2026,Summit Medical Group,Richard Wilson,Active Claims Case,Rep to Obtain Packet,12/15/2026,Upcoming,Submitted,,0,,,,24,20,Dr. Emily Stone,1604006325,Riley Chen
+Noah Clark,,12/23/2026,Cedar Valley Services,Richard Rodriguez,On Hold - No Renewal PO,Rep to Obtain Packet,12/30/2026,Upcoming,In Review,,0,,,,16,16,Dr. Kevin Wright,1776914430,Avery Johnson
+Emma Lewis,Jonny Rodene,11/12/2026,Oakwood Health,Mary Smith,Active,Rep to Obtain Packet,11/19/2026,Past Due,Auth Packet Due,,,,,,,,Dr. Sofia Perez,1147630403,Jamie Torres
+Ava Walker,Jonny Rodene,10/26/2026,Seaside Medical,David Moore,On Hold – Medical,Rep to Obtain Packet,11/2/2026,Past Due,In Review,,0,,,,,20,Dr. Hannah Brooks,1018406723,Drew Sullivan
+Lucas Hall,Ben Ortiz,10/3/2026,Summit Medical Group,Joseph Anderson,Active,Rep to Obtain Packet,10/10/2026,Past Due,Auth Packet Due,Missing Signature,4400,,,,20,,Dr. Peter Grant,1261142486,Parker Nguyen
+Sophia Young,,11/18/2026,Blue River Health,Susan Hernandez,Active,Rep to Obtain Packet,11/25/2026,Upcoming (C),In Review,,,,,,24,,Dr. Peter Grant,1921227867,Cameron Diaz
+James King,,11/10/2026,Oakwood Health,Mary Garcia,On Hold – Medical,Pending Review,11/17/2026,Past Due,In Review,,9600,,,,,,Dr. Marcus Lee,1016812751,Skyler Reed
+Isabella Wright,Ben Ortiz,11/2/2026,Cedar Valley Services,Jennifer Johnson,Active,Rep to Obtain Packet,11/9/2026,Past Due,In Review,,19200,,,,20,20,Dr. Raj Mehta,1469319938,Alex Morgan
+Henry Scott,Ben Ortiz,10/14/2026,Oakwood Health,Joseph Williams,On Hold – Medical,Pending Review,10/21/2026,Past Due,In Review,,0,,,,20,,Dr. Peter Grant,1317161302,Jordan Lee
+Grace Adams,,11/11/2026,Summit Medical Group,David Brown,On Hold - No Renewal PO,Pending Review,11/18/2026,Past Due,Auth Packet Due,,0,,,,20,,Dr. Laura Kim,1093734690,Taylor Brooks
+Sam Carter,Ben Ortiz,10/19/2026,Lakeside Health Partners,Christopher Taylor,On Hold – Medical,Rep to Obtain Packet,10/26/2026,Past Due,Submitted,,,,,,,16,Dr. Laura Kim,1735852444,Casey Rivera
+Nina Alvarez,Dylan Price,11/20/2026,Maple Grove Clinic,Karen Miller,On Hold - No Renewal PO,Rep to Obtain Packet,11/27/2026,Upcoming,Submitted,,,,,,24,,Dr. Kevin Wright,1114860711,Morgan Patel
+Evan Brooks,Ben Ortiz,11/8/2026,Blue River Health,Richard Garcia,Active Claims Case,Rep to Obtain Appeal,11/15/2026,Denied,Auth Packet Denied,Needs Appeal,9600,11/1/2026,Incomplete Documentation,Photo Missing,16,0,Dr. Sofia Perez,1342671456,Riley Chen
+Mia Thompson,Tara Singh,12/6/2026,Sunrise Home Health,Thomas Miller,On Hold – Medical,Rep to Obtain Packet,12/13/2026,Upcoming,In Review,,19200,,,,16,,Dr. Kevin Wright,1856508307,Avery Johnson
+Liam Harris,Ben Ortiz,12/26/2026,Maple Grove Clinic,Joseph Moore,On Hold - No Renewal PO,Rep to Obtain Packet,1/2/2027,Upcoming,Submitted,,9600,,,,24,,Dr. Dana Ross,1991596011,Jamie Torres
+Sam Carter,,11/30/2026,Summit Medical Group,Sarah Martin,Active,Rep to Obtain Packet,12/7/2026,Upcoming,Auth Packet Due,,,,,,,,Dr. Raj Mehta,1117434526,
+Sophia Young,,11/11/2026,Oakwood Health,Jennifer Garcia,Active,Rep to Obtain Packet,11/18/2026,Past Due,Auth Packet Due,,,,,,,,Dr. Peter Grant,1047563208,
+Sophia Young,,12/2/2026,Oakwood Health,Joseph Hernandez,Active,Rep to Obtain Packet,12/9/2026,Upcoming,Auth Packet Due,,,,,,,,Dr. Sofia Perez,1113757100,
+Nina Alvarez,,10/27/2026,Evergreen Wound Clinic,Barbara Taylor,Active,Rep to Obtain Packet,11/3/2026,Past Due,Auth Packet Due,,,,,,,,Dr. Dana Ross,1599140867,
+James King,,12/3/2026,Maple Grove Clinic,Barbara Anderson,Active,Rep to Obtain Packet,12/10/2026,Upcoming,Auth Packet Due,,,,,,,,Dr. Marcus Lee,1419977113,
