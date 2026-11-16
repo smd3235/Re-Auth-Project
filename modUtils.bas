@@ -167,6 +167,57 @@ Public Function BuildOutputArray(ByVal data As Variant, ByVal rows As Collection
     BuildOutputArray = arr
 End Function
 
+Public Function SortRowsByHeader(ByVal data As Variant, ByVal rows As Collection, ByVal headerName As String) As Collection
+    Dim arr() As Variant
+    Dim i As Long, j As Long, n As Long
+    Dim srcCol As Long, c As Long
+    Dim tmpRow As Long, tmpKey As String
+    Dim keys() As String
+    Dim result As New Collection
+
+    On Error Resume Next
+    Set SortRowsByHeader = rows
+    n = rows.Count
+    If n <= 1 Then Exit Function
+    If Not IsArray(data) Then Exit Function
+
+    srcCol = 0
+    For c = 1 To UBound(data, 2)
+        If LCase$(Trim$(CStr(data(1, c)))) = LCase$(Trim$(headerName)) Then
+            srcCol = c
+            Exit For
+        End If
+    Next c
+    If srcCol = 0 Then Exit Function
+
+    ReDim arr(1 To n)
+    ReDim keys(1 To n)
+    For i = 1 To n
+        arr(i) = CLng(rows(i))
+        keys(i) = LCase$(Trim$(CStr(data(arr(i), srcCol))))
+    Next i
+
+    ' simple insertion sort (stable enough for typical tab sizes)
+    For i = 2 To n
+        tmpRow = arr(i)
+        tmpKey = keys(i)
+        j = i - 1
+        Do While j >= 1
+            If StrComp(keys(j), tmpKey, vbTextCompare) <= 0 Then Exit Do
+            arr(j + 1) = arr(j)
+            keys(j + 1) = keys(j)
+            j = j - 1
+        Loop
+        arr(j + 1) = tmpRow
+        keys(j + 1) = tmpKey
+    Next i
+
+    For i = 1 To n
+        result.Add arr(i)
+    Next i
+    Set SortRowsByHeader = result
+End Function
+
 Public Function BuildManagerOutputArray(ByVal data As Variant, ByVal rows As Collection, ByVal orderedHeaders As Variant) As Variant
     Dim arr() As Variant
     Dim srcCols() As Long

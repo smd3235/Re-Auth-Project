@@ -223,7 +223,7 @@ Public Function CreateReAuthReport() As Boolean
         ws.Name = SafeSheetName(manager, outWb)
         managerSheetNames(manager) = ws.Name
 
-        arrOut = BuildManagerOutputArray(currentData, managerRows(manager), mgrHeaders)
+        arrOut = BuildManagerOutputArray(currentData, SortRowsByHeader(currentData, managerRows(manager), WCC_HEADER), mgrHeaders)
         ws.Range(ws.Cells(MANAGER_HEADER_ROW, 1), ws.Cells(MANAGER_HEADER_ROW + UBound(arrOut, 1) - 1, mgrColCount)).Value = arrOut
         For c = LBound(mgrHeaders) To UBound(mgrHeaders)
             ws.Cells(MANAGER_HEADER_ROW, c - LBound(mgrHeaders) + 1).Value = CStr(mgrHeaders(c))
