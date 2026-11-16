@@ -6,7 +6,7 @@ Automated Excel/VBA report builder for **weekly pending and upcoming patient re-
 - **Template:** `Re-Auth Template.xlsm` (macro entry: `CreateReAuthReport`, button **CREATE RE-AUTH REPORT** on `START HERE`)
 - **Sample input:** `reauth raw.csv` (fake/sample data only)
 - **Output:** `Reports\ReAuth_Report_YYYY-mm-dd_HHMM.xlsx`
-- **Latest generated sample:** `Reports\ReAuth_Report_2026-11-16_1139.xlsx` (source: `reauth raw.csv`, 145 rows / 12 managers / 15 WCCs, generated 2026-11-16 11:39 AM)
+- **Latest generated sample:** `Reports\ReAuth_Report_2026-11-16_1151.xlsx` (source: `reauth raw.csv`, 145 rows / 12 managers / 15 WCCs, generated 2026-11-16 11:51 AM)
 
 > **GitHub display note:** GitHub renders a repository README in the section **below** the file browser by design. This README is kept at the repo root so the overview and screenshots appear in that rendered section when viewing the repository.
 
@@ -14,7 +14,7 @@ Automated Excel/VBA report builder for **weekly pending and upcoming patient re-
 
 ## Screenshots (clean capture from latest report)
 
-All screenshots below were exported from `Reports\ReAuth_Report_2026-11-16_1139.xlsx` using `scripts\snapshot-report.py` (Excel COM `CopyPicture` → chart export). They reflect the current layout, styling, and sample data.
+All screenshots below were exported from `Reports\ReAuth_Report_2026-11-16_1151.xlsx` using `scripts\snapshot-report.py` (Excel COM `CopyPicture` → chart export). They reflect the current layout, styling, and sample data.
 
 ### Dashboard
 KPI summary cards and a manager breakdown table aligned edge-to-edge across columns A:J.
@@ -211,7 +211,7 @@ The macro scans for a header row containing at least:
 - Finds the newest workbook in `Reports\` by default (or use `--path`).
 - Opens Excel via COM, activates each sheet, copies `UsedRange` as a picture, pastes/exports via a chart object to PNG.
 - Writes to `documentation/screenshots/` with deterministic names (`report-dashboard.png`, `report-<sheet>.png`, `report-raw-data.png`).
-- Clears existing PNGs in the output folder before export so screenshots stay in sync with the selected report.
+- By default clears existing PNGs in the output folder before a full export so screenshots stay in sync with the selected report. Use `--keep` to add/update specific sheets without removing others (recommended for partial runs).
 
 Examples:
 ```powershell
@@ -219,7 +219,7 @@ Examples:
 python .\scripts\snapshot-report.py
 
 # Export from a specific report
-python .\scripts\snapshot-report.py --path "Reports\ReAuth_Report_2026-11-16_1139.xlsx"
+python .\scripts\snapshot-report.py --path "Reports\ReAuth_Report_2026-11-16_1151.xlsx"
 
 # Export specific sheets only
 python .\scripts\snapshot-report.py --sheets Dashboard "Taylor Brooks" "Raw Data"
@@ -269,8 +269,8 @@ python .\scripts\run-report.py --source "$PWD\reauth raw.csv"
 
 ## Validation (latest)
 - `python .\scripts\test-compile.py` → `RESULT: COMPILE OK`, `COMPILE_OK=1`
-- `python .\scripts\run-report.py --source "$PWD\reauth raw.csv"` → `OUTCOME=SUCCESS`, `NEW_REPORT=...\Reports\ReAuth_Report_2026-11-16_1139.xlsx`
-- `python .\scripts\snapshot-report.py --path "Reports\ReAuth_Report_2026-11-16_1139.xlsx"` → exported dashboard, 12 manager tabs, `Unassigned`, and `Raw Data` to `documentation/screenshots/`
+- `python .\scripts\run-report.py --source "$PWD\reauth raw.csv"` → `OUTCOME=SUCCESS`, `NEW_REPORT=...\Reports\ReAuth_Report_2026-11-16_1151.xlsx`
+- `python .\scripts\snapshot-report.py --path "Reports\ReAuth_Report_2026-11-16_1151.xlsx"` → exported dashboard, 12 manager tabs, `Unassigned`, and `Raw Data` to `documentation/screenshots/`
 
 ## Known limitations / data safety
 - Large exports may increase runtime/memory usage in Excel.

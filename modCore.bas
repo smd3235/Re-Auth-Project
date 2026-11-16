@@ -202,11 +202,11 @@ Public Function CreateReAuthReport() As Boolean
     mgrHeaders = Array( _
         WCC_HEADER, _
         ASSOC_WCC_HEADER, _
+        AUTH_STATUS_HEADER, _
         PATIENT_HEADER, _
         COMPANY_HEADER, _
         REAUTH_DUE_HEADER, _
         AUTH_START_HEADER, _
-        AUTH_STATUS_HEADER, _
         AUTHORIZATION_STATUS_HEADER, _
         TASK_HEADER, _
         "Patient/Packet Status", _
