@@ -1,18 +1,20 @@
 ﻿# sync_template.py - import VBA modules into Re-Auth Template.xlsm (reliable replace)
+# Can also build a local macro-enabled template from the macro-free base (.xlsx) to avoid MOTW issues.
 import argparse
 import glob
 import os
 import sys
 import win32com.client
 
-parser = argparse.ArgumentParser(description="Sync VBA modules into the Re-Auth template")
-parser.add_argument("--template", default=None)
+parser = argparse.ArgumentParser(description="Sync VBA modules into the Re-Auth template / build local .xlsm")
+parser.add_argument("--template", default=None, help="Template to open (.xlsm or macro-free .xlsx base)")
+parser.add_argument("--output", default=None, help="Output path (default: overwrite template; or .xlsm when building from .xlsx)")
 parser.add_argument("--bas-dir", default=None)
 args = parser.parse_args()
 
 script_dir = os.path.dirname(os.path.abspath(__file__))
 project_root = os.path.dirname(script_dir)
-template = args.template or os.path.join(project_root, "Re-Auth Template.xlsm")
+template = os.path.abspath(args.template or os.path.join(project_root, "Re-Auth Template.xlsm"))
 bas_dir = args.bas_dir or project_root
 button_name = "btnCreateReAuthReport"
 
@@ -51,9 +53,9 @@ try:
 
     ws = wb.Worksheets("START HERE")
     btn = None
-    for s in ws.Shapes:
-        if s.Name in (button_name, "btnCreatePendingPickupReport"):
-            btn = s
+    for shp in ws.Shapes:
+        if shp.Name in (button_name, "btnCreatePendingPickupReport"):
+            btn = shp
             btn.Name = button_name
             break
     if btn is None:
@@ -63,26 +65,36 @@ try:
     try:
         btn.Fill.ForeColor.RGB = 7949855
         btn.Line.ForeColor.RGB = 4116214
-        btn.TextFrame2.TextRange.Text = "CREATE RE-AUTH REPORT"
-        btn.TextFrame2.TextRange.Font.Bold = True
-        btn.TextFrame2.TextRange.Font.Size = 14
-        btn.TextFrame2.TextRange.Font.Name = "Segoe UI"
-        btn.TextFrame2.TextRange.Font.Fill.ForeColor.RGB = 16777215
+        try:
+            btn.TextFrame2.TextRange.Text = "CREATE RE-AUTH REPORT"
+            btn.TextFrame2.TextRange.Font.Bold = True
+            btn.TextFrame2.TextRange.Font.Size = 14
+            btn.TextFrame2.TextRange.Font.Name = "Segoe UI"
+            btn.TextFrame2.TextRange.Font.Fill.ForeColor.RGB = 16777215
+        except Exception:
+            btn.TextFrame.Characters().Text = "CREATE RE-AUTH REPORT"
     except Exception:
         pass
     btn.OnAction = "CreateReAuthReport"
 
     for name in ["btnSetupEmailCC"]:
-        for s in list(ws.Shapes):
+        for shp in list(ws.Shapes):
             try:
-                if s.Name == name:
-                    s.Delete()
+                if shp.Name == name:
+                    shp.Delete()
             except Exception:
                 pass
 
-    wb.Save()
+    out_path = os.path.abspath(args.output) if args.output else template
+    # If building from macro-free base (.xlsx/.xltx), save as macro-enabled workbook
+    if out_path.lower().endswith(('.xlsx', '.xltx')):
+        out_path = os.path.splitext(out_path)[0] + '.xlsm'
+    if out_path.lower().endswith('.xlsm'):
+        wb.SaveAs(out_path, FileFormat=52)  # xlOpenXMLWorkbookMacroEnabled
+    else:
+        wb.Save()
     wb.Close(True)
-    print(f"Synced {len(bas_files)} module(s) into {template}")
+    print(f"Synced {len(bas_files)} module(s) into {out_path}")
     for b in bas_files:
         print(f"  - {os.path.basename(b)}")
 finally:

@@ -6,7 +6,7 @@ Automated Excel/VBA report builder for **weekly pending and upcoming patient re-
 - **Template:** `Re-Auth Template.xlsm` (macro entry: `CreateReAuthReport`, button **CREATE RE-AUTH REPORT** on `START HERE`)
 - **Sample input:** `reauth raw.csv` (fake/sample data only)
 - **Output:** `Reports\ReAuth_Report_YYYY-mm-dd_HHMM.xlsx`
-- **Latest generated sample:** `Reports\ReAuth_Report_2026-11-16_1151.xlsx` (source: `reauth raw.csv`, 145 rows / 12 managers / 15 WCCs, generated 2026-11-16 11:51 AM)
+- **Latest generated sample:** `Reports\ReAuth_Report_2026-11-16_1205.xlsx` (source: `reauth raw.csv`, 145 rows / 12 managers / 15 WCCs, generated 2026-11-16 12:05 PM)
 
 > **GitHub display note:** GitHub renders a repository README in the section **below** the file browser by design. This README is kept at the repo root so the overview and screenshots appear in that rendered section when viewing the repository.
 
@@ -14,7 +14,7 @@ Automated Excel/VBA report builder for **weekly pending and upcoming patient re-
 
 ## Screenshots (clean capture from latest report)
 
-All screenshots below were exported from `Reports\ReAuth_Report_2026-11-16_1151.xlsx` using `scripts\snapshot-report.py` (Excel COM `CopyPicture` → chart export). They reflect the current layout, styling, and sample data.
+All screenshots below were exported from `Reports\ReAuth_Report_2026-11-16_1205.xlsx` using `scripts\snapshot-report.py` (Excel COM `CopyPicture` → chart export). They reflect the current layout, styling, and sample data.
 
 ### Dashboard
 KPI summary cards and a manager breakdown table aligned edge-to-edge across columns A:J.
@@ -122,6 +122,16 @@ python .\scripts\view-logs.py
 
 `scripts\run-report.py` runs `CreateReAuthReport` via COM, manages `log\auto-source.txt`, auto-answers common dialogs, enforces a watchdog, and prints `OUTCOME=` / `NEW_REPORT=`.
 
+### Build locally (avoid "untrusted macros" block)
+If downloading `Re-Auth Template.xlsm` is blocked by Mark-of-the-Web on a work PC, build the macro-enabled workbook **locally** so the saved file is trusted as a local document:
+
+1. Use **`Re-Auth Template (No Macros).xlsx`** (macro-free base, included in repo) or a locally saved copy.
+2. Ensure Excel allows programmatic VBA access (Trust Center → Macro Settings → **Trust access to the VBA project object model**) and macros are permitted per policy.
+3. Run: `python .\scripts\sync_template.py --template "Re-Auth Template (No Macros).xlsx"`  
+   This imports `mod*.bas`, creates/links the **CREATE RE-AUTH REPORT** button, and saves **`Re-Auth Template.xlsm`** locally.
+4. Or build manually: open the base `.xlsx`, Alt+F11 → Import File for each `mod*.bas`, assign button `btnCreateReAuthReport` → macro `CreateReAuthReport`, save as **Excel Macro-Enabled Workbook (*.xlsm)** in a trusted/local folder.
+5. If `.bas`/ZIP files are also blocked after download, Unblock them first (`Unblock-File`) or copy from a trusted source; strict org policy may still require an IT-trusted location or a signed workbook.
+
 ---
 
 ## Input data contract
@@ -157,6 +167,7 @@ The macro scans for a header row containing at least:
 - Styled header banding, frozen header area, and consistent column alignment/widths for edge-to-edge readability.
 
 ### 2) Manager tabs (one per manager + Unassigned)
+- Layout is a single section per tab (one title/summary block and one data table). The formatter clears any split view and reapplies a standard freeze below the header to avoid Excel showing a duplicated/cloned pane.
 - **Title block:** `RE-AUTH  |  <MANAGER NAME>`, `Total re-auths: N`, generated timestamp.
 - **Per-rep summary:** merged block **`A5:K9`** labeled `RE-AUTHS BY SALES REP` showing counts per `Wound Care Consultant` within the manager’s records.
 - **Data table:** header at **row 15**, data starts at **row 16**, autofilter enabled, freeze panes at **`A16`**.
@@ -220,7 +231,7 @@ Examples:
 python .\scripts\snapshot-report.py
 
 # Export from a specific report
-python .\scripts\snapshot-report.py --path "Reports\ReAuth_Report_2026-11-16_1151.xlsx"
+python .\scripts\snapshot-report.py --path "Reports\ReAuth_Report_2026-11-16_1205.xlsx"
 
 # Export specific sheets only
 python .\scripts\snapshot-report.py --sheets Dashboard "Taylor Brooks" "Raw Data"
@@ -271,8 +282,8 @@ python .\scripts\run-report.py --source "$PWD\reauth raw.csv"
 
 ## Validation (latest)
 - `python .\scripts\test-compile.py` → `RESULT: COMPILE OK`, `COMPILE_OK=1`
-- `python .\scripts\run-report.py --source "$PWD\reauth raw.csv"` → `OUTCOME=SUCCESS`, `NEW_REPORT=...\Reports\ReAuth_Report_2026-11-16_1151.xlsx`
-- `python .\scripts\snapshot-report.py --path "Reports\ReAuth_Report_2026-11-16_1151.xlsx"` → exported dashboard, 12 manager tabs, `Unassigned`, and `Raw Data` to `documentation/screenshots/`
+- `python .\scripts\run-report.py --source "$PWD\reauth raw.csv"` → `OUTCOME=SUCCESS`, `NEW_REPORT=...\Reports\ReAuth_Report_2026-11-16_1205.xlsx`
+- `python .\scripts\snapshot-report.py --path "Reports\ReAuth_Report_2026-11-16_1205.xlsx"` → exported dashboard, 12 manager tabs, `Unassigned`, and `Raw Data` to `documentation/screenshots/`
 
 ## Known limitations / data safety
 - Large exports may increase runtime/memory usage in Excel.
