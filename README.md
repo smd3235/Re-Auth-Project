@@ -128,6 +128,10 @@ python .\scripts\view-logs.py
 
 `scripts\run-report.py` runs `CreateReAuthReport` via COM, manages `log\auto-source.txt`, auto-answers common dialogs, enforces a watchdog, and prints `OUTCOME=` / `NEW_REPORT=`.
 
+### Quick download (no full repo clone)
+- **[Re-Auth-Local-Build.zip](Re-Auth-Local-Build.zip)** — macro-free base (`Re-Auth Template (No Macros).xlsx`) + all 5 `mod*.bas` files + build instructions. Extract to a local folder, import all 5 `.bas` modules in Excel (Alt+F11 → File → Import), save as `.xlsm`, and run. No Python required.
+- **[Re-Auth Template.xlsm](Re-Auth Template.xlsm)** — prebuilt macro-enabled template (use directly if not blocked by policy; Unblock/Trusted Location may be required).
+
 ### Build locally (avoid "untrusted macros" block)
 If downloading `Re-Auth Template.xlsm` is blocked by Mark-of-the-Web on a work PC, build the macro-enabled workbook **locally** so the saved file is trusted as a local document:
 
