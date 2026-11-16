@@ -178,13 +178,10 @@ Public Sub FormatDashboard(ByVal ws As Worksheet, ByVal reportStamp As String, B
     ws.Columns("J").ColumnWidth = 10
 
     ws.Activate
-    With ActiveWindow
-        .FreezePanes = False
-        .Split = False
-        .SplitColumn = 0
-        .SplitRow = 8
-        .FreezePanes = True
-    End With
+    On Error Resume Next
+    ActiveWindow.FreezePanes = False
+    ActiveWindow.Split = False
+    On Error GoTo EH
     ws.Range("A1").Select
     LogMsg "FormatDashboard done"
     Exit Sub
@@ -351,13 +348,10 @@ Public Sub FormatManagerSheet(ByVal ws As Worksheet, ByVal managerName As String
     ApplyUniformColumnWidths ws, 1, lastCol
 
     ws.Activate
-    With ActiveWindow
-        .FreezePanes = False
-        .Split = False
-        .SplitColumn = 0
-        .SplitRow = headerRow
-        .FreezePanes = True
-    End With
+    On Error Resume Next
+    ActiveWindow.FreezePanes = False
+    ActiveWindow.Split = False
+    On Error GoTo EH
     ws.Range("A1").Select
     LogMsg "FormatManagerSheet done: " & managerName
     Exit Sub
@@ -478,13 +472,10 @@ Public Sub FormatRawData(ByVal ws As Worksheet, ByVal lastCol As Long, ByVal las
     ApplyUniformColumnWidths ws, 1, lastCol
 
     ws.Activate
-    With ActiveWindow
-        .FreezePanes = False
-        .Split = False
-        .SplitColumn = 0
-        .SplitRow = 1
-        .FreezePanes = True
-    End With
+    On Error Resume Next
+    ActiveWindow.FreezePanes = False
+    ActiveWindow.Split = False
+    On Error GoTo EH
     ws.Range("A1").Select
     LogMsg "FormatRawData done"
     Exit Sub
