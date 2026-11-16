@@ -365,10 +365,31 @@ Public Sub FormatManagerSheet(ByVal ws As Worksheet, ByVal managerName As String
     LogMsg "FormatManagerSheet widths: " & managerName
     ApplyUniformColumnWidths ws, 1, lastCol
 
+    ' Shade only empty areas with no data applied (e.g. spacer/gap rows between rep summary and table header)
+    On Error Resume Next
+    Dim gapEnd As Long, fillLast As Long
+    fillLast = Application.WorksheetFunction.Max(lastCol, 11)
+    If fillLast > ws.Columns.Count Then fillLast = lastCol
+    ' row 4 spacer
+    With ws.Range(ws.Cells(4, 1), ws.Cells(4, fillLast))
+        .Interior.Color = RGB(221, 235, 247)
+        .Borders.LineStyle = xlNone
+    End With
+    ' gap between rep summary block (rows 5-9) and data table header
+    gapEnd = headerRow - 1
+    If gapEnd >= 10 Then
+        With ws.Range(ws.Cells(10, 1), ws.Cells(gapEnd, fillLast))
+            .Interior.Color = RGB(221, 235, 247)
+            .Borders.LineStyle = xlNone
+        End With
+    End If
+    On Error GoTo EH
+
     ws.Activate
     On Error Resume Next
     ActiveWindow.FreezePanes = False
     ActiveWindow.Split = False
+    ActiveWindow.DisplayGridlines = False
     On Error GoTo EH
     ws.Range("A1").Select
     LogMsg "FormatManagerSheet done: " & managerName

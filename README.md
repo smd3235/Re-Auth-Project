@@ -195,7 +195,7 @@ The macro scans for a header row containing at least:
   10. `Patient/Packet Status`
   11. `Treatment Physician`
 - **Excluded from manager tabs (available in Raw Data):** `Assigned Sales Manager`, `Treatment Physician NPI Number`, `Pending SO Amount`, `Sales Order RX Qty Requested`, `Sales Order RX Qty Approved`, `Authorization Sub Status`, `Initial Authorization Denial Date`, `Authorization Denial Reason`, `Denial Reason Sub List`.
-- **Formatting:** Segoe UI styling, bordered table with alternating row bands by Sales Rep/Wound Care Consultant group (not per-row), date formatting on key fields, status-based highlighting (e.g. Past Due / Upcoming / Denied).
+- **Formatting:** Segoe UI styling, bordered table with alternating row bands by Sales Rep/Wound Care Consultant group (not per-row), date formatting on key fields, status-based highlighting (e.g. Past Due / Upcoming / Denied). Light-blue fill is applied only to empty spacer/gap areas with no data (between the rep summary block and the table header) with gridlines off on manager tabs; the rest of the sheet is not fully shaded.
 
 ### 3) Raw Data
 - Contains **all rows** from the source with **all original columns in original order**.
