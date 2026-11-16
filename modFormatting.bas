@@ -60,7 +60,8 @@ Public Sub FormatDashboard(ByVal ws As Worksheet, ByVal reportStamp As String, B
     ws.Rows(5).RowHeight = 36
     ws.Rows(6).RowHeight = 10
 
-    Set rng = ws.Range("A7:E7")
+    ' Manager summary - full width A:J aligned with KPI grid
+    Set rng = ws.Range("A7:J7")
     rng.Merge
     rng.Value = "  MANAGER BREAKDOWN"
     With rng
@@ -74,12 +75,15 @@ Public Sub FormatDashboard(ByVal ws As Worksheet, ByVal reportStamp As String, B
     End With
     ws.Rows(7).RowHeight = 24
 
+    ws.Range("A8:D8").Merge
     ws.Range("A8").Value = "Assigned Sales Manager"
-    ws.Range("B8").Value = "Total"
-    ws.Range("C8").Value = "Past Due"
-    ws.Range("D8").Value = "% Past Due"
-    ws.Range("E8").Value = "Tab"
-    With ws.Range("A8:E8")
+    ws.Range("E8").Value = "Total"
+    ws.Range("F8").Value = "Past Due"
+    ws.Range("G8:H8").Merge
+    ws.Range("G8").Value = "% Past Due"
+    ws.Range("I8:J8").Merge
+    ws.Range("I8").Value = "Tab"
+    With ws.Range("A8:J8")
         .Font.Name = "Segoe UI"
         .Font.Bold = True
         .Font.Size = 10
@@ -96,54 +100,61 @@ Public Sub FormatDashboard(ByVal ws As Worksheet, ByVal reportStamp As String, B
     If IsArray(managers) Then
         For i = LBound(managers) To UBound(managers)
             mgr = CStr(managers(i))
+            ws.Range("A" & rowPtr & ":D" & rowPtr).Merge
             ws.Cells(rowPtr, 1).Value = mgr
-            ws.Cells(rowPtr, 2).Value = CLng(managerCounts(mgr))
-            ws.Cells(rowPtr, 3).Value = CLng(managerPastDue(mgr))
+            ws.Cells(rowPtr, 5).Value = CLng(managerCounts(mgr))
+            ws.Cells(rowPtr, 6).Value = CLng(managerPastDue(mgr))
+            ws.Range("G" & rowPtr & ":H" & rowPtr).Merge
             If CLng(managerCounts(mgr)) > 0 Then
                 pct = CDbl(managerPastDue(mgr)) / CDbl(managerCounts(mgr))
             Else
                 pct = 0
             End If
-            ws.Cells(rowPtr, 4).Value = pct
-            ws.Cells(rowPtr, 4).NumberFormat = "0.0%"
+            ws.Cells(rowPtr, 7).Value = pct
+            ws.Cells(rowPtr, 7).NumberFormat = "0.0%"
+            ws.Range("I" & rowPtr & ":J" & rowPtr).Merge
+            ws.Cells(rowPtr, 9).Value = ""
 
             If Not managerSheetNames Is Nothing Then
                 If managerSheetNames.Exists(mgr) Then
                     On Error Resume Next
-                    ws.Hyperlinks.Add Anchor:=ws.Cells(rowPtr, 5), Address:="", SubAddress:="'" & CStr(managerSheetNames(mgr)) & "'!A1", TextToDisplay:="Open"
+                    ws.Hyperlinks.Add Anchor:=ws.Cells(rowPtr, 9), Address:="", SubAddress:="'" & CStr(managerSheetNames(mgr)) & "'!A1", TextToDisplay:="Open"
                     On Error GoTo EH
-                    ws.Cells(rowPtr, 5).Font.Bold = True
+                    ws.Cells(rowPtr, 9).Font.Bold = True
                 End If
             End If
 
-            With ws.Range(ws.Cells(rowPtr, 1), ws.Cells(rowPtr, 5))
+            With ws.Range(ws.Cells(rowPtr, 1), ws.Cells(rowPtr, 10))
                 .Font.Name = "Segoe UI"
                 .Font.Size = 10
                 .Borders.LineStyle = xlContinuous
                 .VerticalAlignment = xlCenter
             End With
             ws.Cells(rowPtr, 1).HorizontalAlignment = xlLeft
-            ws.Range(ws.Cells(rowPtr, 2), ws.Cells(rowPtr, 5)).HorizontalAlignment = xlCenter
+            ws.Cells(rowPtr, 5).HorizontalAlignment = xlCenter
+            ws.Cells(rowPtr, 6).HorizontalAlignment = xlCenter
+            ws.Cells(rowPtr, 7).HorizontalAlignment = xlCenter
+            ws.Cells(rowPtr, 9).HorizontalAlignment = xlCenter
             ws.Rows(rowPtr).RowHeight = 21
 
             If rowPtr Mod 2 = 1 Then
-                ws.Range(ws.Cells(rowPtr, 1), ws.Cells(rowPtr, 5)).Interior.Color = RGB(242, 247, 255)
+                ws.Range(ws.Cells(rowPtr, 1), ws.Cells(rowPtr, 10)).Interior.Color = RGB(242, 247, 255)
             Else
-                ws.Range(ws.Cells(rowPtr, 1), ws.Cells(rowPtr, 5)).Interior.Color = RGB(255, 255, 255)
+                ws.Range(ws.Cells(rowPtr, 1), ws.Cells(rowPtr, 10)).Interior.Color = RGB(255, 255, 255)
             End If
 
             If pct >= 0.5 Then
-                ws.Cells(rowPtr, 4).Interior.Color = RGB(255, 199, 206)
-                ws.Cells(rowPtr, 4).Font.Color = RGB(156, 0, 6)
-                ws.Cells(rowPtr, 4).Font.Bold = True
+                ws.Cells(rowPtr, 7).Interior.Color = RGB(255, 199, 206)
+                ws.Cells(rowPtr, 7).Font.Color = RGB(156, 0, 6)
+                ws.Cells(rowPtr, 7).Font.Bold = True
             ElseIf pct >= 0.25 Then
-                ws.Cells(rowPtr, 4).Interior.Color = RGB(255, 235, 156)
-                ws.Cells(rowPtr, 4).Font.Color = RGB(156, 101, 0)
-                ws.Cells(rowPtr, 4).Font.Bold = True
+                ws.Cells(rowPtr, 7).Interior.Color = RGB(255, 235, 156)
+                ws.Cells(rowPtr, 7).Font.Color = RGB(156, 101, 0)
+                ws.Cells(rowPtr, 7).Font.Bold = True
             End If
             If CLng(managerPastDue(mgr)) > 0 Then
-                ws.Cells(rowPtr, 3).Font.Color = RGB(192, 0, 0)
-                ws.Cells(rowPtr, 3).Font.Bold = True
+                ws.Cells(rowPtr, 6).Font.Color = RGB(192, 0, 0)
+                ws.Cells(rowPtr, 6).Font.Bold = True
             End If
 
             rowPtr = rowPtr + 1
@@ -152,11 +163,19 @@ Public Sub FormatDashboard(ByVal ws As Worksheet, ByVal reportStamp As String, B
 
     lastDataRow = Application.WorksheetFunction.Max(8, rowPtr - 1)
     On Error Resume Next
-    ws.Range("A8:E" & lastDataRow).AutoFilter
+    ws.Range("A8:J" & lastDataRow).AutoFilter
     On Error GoTo EH
-    ws.Columns("A").ColumnWidth = 30
-    ws.Columns("B:E").ColumnWidth = 13
-    ws.Columns("F:J").ColumnWidth = 12
+
+    ws.Columns("A").ColumnWidth = 22
+    ws.Columns("B").ColumnWidth = 10
+    ws.Columns("C").ColumnWidth = 10
+    ws.Columns("D").ColumnWidth = 10
+    ws.Columns("E").ColumnWidth = 10
+    ws.Columns("F").ColumnWidth = 10
+    ws.Columns("G").ColumnWidth = 10
+    ws.Columns("H").ColumnWidth = 10
+    ws.Columns("I").ColumnWidth = 10
+    ws.Columns("J").ColumnWidth = 10
 
     ws.Activate
     With ActiveWindow
