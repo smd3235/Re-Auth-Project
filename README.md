@@ -91,11 +91,12 @@ All source rows and all original columns preserved in original order (formatted/
 ## Quick start
 
 ### End users (Excel, Windows)
-1. Open **`Re-Auth Template.xlsm`** in desktop Microsoft Excel.
-2. Enable macros/content if prompted.
-3. Go to **`START HERE`** and click **`CREATE RE-AUTH REPORT`**.
-4. Select the raw re-auth file when prompted.
-5. Wait for completion; the report is saved to `Reports\ReAuth_Report_YYYY-mm-dd_HHMM.xlsx`.
+1. Place **`Re-Auth Template.xlsm`** in a trusted local folder (e.g. `C:\ReAuth\`) and open it in desktop Microsoft Excel.
+2. **If macros are blocked as “untrusted source”:** close Excel, right-click the `.xlsm` → **Properties** → check **Unblock** → **Apply/OK**, then reopen. PowerShell alternative: `Unblock-File .\Re-Auth Template.xlsm`. If there is no Unblock checkbox, move the file to a **Trusted Location** (Excel → File → Options → Trust Center → Trust Center Settings → Trusted Locations) or ask IT to trust/sign the macro per policy.
+3. Enable macros/content if prompted.
+4. Go to **`START HERE`** and click **`CREATE RE-AUTH REPORT`**.
+5. Select the raw re-auth file when prompted.
+6. Wait for completion; the report is saved to `Reports\ReAuth_Report_YYYY-mm-dd_HHMM.xlsx`.
 
 ### Maintainers (unattended / CLI)
 **Prerequisites:** Windows, desktop Excel (COM), Python 3, `pywin32` (`win32com`). For sync/compile tooling, Excel must allow programmatic access to the VBA project (Trust access to the VBA project object model).
@@ -250,6 +251,7 @@ python .\scripts\run-report.py --source "$PWD\reauth raw.csv"
 ```
 
 ### Troubleshooting notes
+- **Macros blocked (“Microsoft has blocked macros from running because the source of this file is untrusted”):** Files downloaded/copied from the internet or email can carry a Mark-of-the-Web and be blocked by modern Excel security. Fix: close Excel → right-click `Re-Auth Template.xlsm` → **Properties** → enable **Unblock** → Apply/OK → reopen (or run `Unblock-File .\Re-Auth Template.xlsm` in PowerShell). If your org hides Unblock or enforces stricter policy, place the file in an approved **Trusted Location**, or have IT trust/sign the workbook (e.g. trusted publisher/certificate) per company policy. Avoid disabling macro security globally.
 - **VBA compile issues:** run `scripts\test-compile.py` and inspect `log\compile-test.log` / `log\watcher.log`.
 - **Dialogs/hangs:** `scripts\run-report.py` and `scripts\answer-dialogs.py` attempt to auto-dismiss common Excel/VBA prompts; check `log\answer-dialogs.log`.
 - **Source path errors:** the harness now resolves the source to an absolute path before passing it to VBA (avoids failures like `Couldn't find .\reauth raw.csv` from a different working context).
