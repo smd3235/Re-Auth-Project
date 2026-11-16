@@ -21,7 +21,7 @@ Public Const WCC_HEADER As String = "Wound Care Consultant"
 Public Const ASSOC_WCC_HEADER As String = "Associate WCC"
 Public Const AUTHORIZATION_STATUS_HEADER As String = "Authorization Status"
 Public Const MACRO_VERSION As String = "1.0"
-Public Const MANAGER_HEADER_ROW As Long = 15
+Public Const MANAGER_HEADER_ROW As Long = 7
 Public Const DASHBOARD_SHEET As String = "Dashboard"
 
 ' ----------------------------------------------------------------------------

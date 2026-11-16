@@ -271,8 +271,7 @@ Public Sub FormatManagerSheet(ByVal ws As Worksheet, ByVal managerName As String
         .IndentLevel = 1
     End With
     ws.Rows(3).RowHeight = 16
-    ws.Rows(4).RowHeight = 5
-    ws.Rows("5:9").RowHeight = 18
+    ws.Rows(4).RowHeight = 3
 
     ' Header row
     With ws.Range(ws.Cells(headerRow, 1), ws.Cells(headerRow, lastCol))
@@ -365,24 +364,16 @@ Public Sub FormatManagerSheet(ByVal ws As Worksheet, ByVal managerName As String
     LogMsg "FormatManagerSheet widths: " & managerName
     ApplyUniformColumnWidths ws, 1, lastCol
 
-    ' Shade only empty areas with no data applied (e.g. spacer/gap rows between rep summary and table header)
+    ' Shade only empty areas with no data applied (spacer row)
     On Error Resume Next
-    Dim gapEnd As Long, fillLast As Long
+    Dim fillLast As Long
     fillLast = Application.WorksheetFunction.Max(lastCol, 11)
     If fillLast > ws.Columns.Count Then fillLast = lastCol
-    ' row 4 spacer
+    ' row 4 spacer between generated timestamp and rep summary
     With ws.Range(ws.Cells(4, 1), ws.Cells(4, fillLast))
         .Interior.Color = RGB(221, 235, 247)
         .Borders.LineStyle = xlNone
     End With
-    ' gap between rep summary block (rows 5-9) and data table header
-    gapEnd = headerRow - 1
-    If gapEnd >= 10 Then
-        With ws.Range(ws.Cells(10, 1), ws.Cells(gapEnd, fillLast))
-            .Interior.Color = RGB(221, 235, 247)
-            .Borders.LineStyle = xlNone
-        End With
-    End If
     On Error GoTo EH
 
     ws.Activate
@@ -450,8 +441,8 @@ Public Sub BuildRepTotalsSection(ByVal ws As Worksheet, ByVal headerRow As Long,
 
     summaryText = "RE-AUTHS BY SALES REP" & vbCrLf & parts
 
-    ws.Rows("5:9").RowHeight = 18
-    Set blockRg = ws.Range(ws.Cells(5, 1), ws.Cells(9, useWidth))
+    ws.Rows("5:6").RowHeight = 18
+    Set blockRg = ws.Range(ws.Cells(5, 1), ws.Cells(6, useWidth))
     blockRg.UnMerge
     blockRg.Merge
     blockRg.Value = summaryText

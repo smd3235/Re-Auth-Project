@@ -28,7 +28,7 @@ KPI summary cards and a manager breakdown table aligned edge-to-edge across colu
 ![Dashboard](documentation/screenshots/report-dashboard.png)
 
 ### Manager tab (example: Taylor Brooks)
-Each manager receives a dedicated tab with title/totals, a per-rep summary block, and a single filtered data table (header row 15, data from row 16, frozen at `A16`).
+Each manager receives a dedicated tab with title/totals, a per-rep summary block, and a single filtered data table (header row 7, data from row 8, frozen at `A16`).
 
 ![Taylor Brooks manager tab](documentation/screenshots/report-taylor-brooks.png)
 
