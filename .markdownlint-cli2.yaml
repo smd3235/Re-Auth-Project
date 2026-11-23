@@ -1,0 +1,13 @@
+# markdownlint-cli2 configuration
+# Relax rules that are noisy for this project (tables, long URLs in code)
+default: true
+MD013: false   # line-length - tables/URLs can't wrap
+MD024: false   # no duplicate heading - README intentionally repeats section names
+MD033: false   # no inline HTML - used for details/summary blocks
+MD036: false   # no emphasis used instead of a heading
+MD041: false   # first line in file should be a top-level heading
+MD046: false   # code block style
+MD048: false   # code fence style
+MD053: false   # code block title
+MD060: false   # table-pipe-style
+MD038: false   # no-space-in-code - code spans with spaces like "`VBA `"

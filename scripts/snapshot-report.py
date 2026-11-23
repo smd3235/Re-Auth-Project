@@ -1,15 +1,48 @@
-﻿# snapshot-report.py - export Re-Auth report sheets as PNG screenshots
-import argparse, os, re, sys, time, subprocess
+# snapshot-report.py - export Re-Auth report sheets as PNG screenshots
+import argparse
+import gc
+import os
+import re
+import subprocess
+import sys
+import time
+
 import win32com.client
 
+
+def excel_pids():
+    try:
+        import psutil
+
+        return {
+            p.pid
+            for p in psutil.process_iter(["name"])
+            if (p.info.get("name") or "").lower() == "excel.exe"
+        }
+    except Exception:
+        return set()
+
+
 parser = argparse.ArgumentParser(description="Export Re-Auth report sheets as PNG screenshots")
-parser.add_argument("--path", default=None, help="Workbook to export (defaults to newest in Reports/)")
+parser.add_argument(
+    "--path", default=None, help="Workbook to export (defaults to newest in Reports/)"
+)
 parser.add_argument("--sheets", nargs="*", default=None, help="Specific sheet names to export")
-parser.add_argument("--out", default=None, help="Output folder (defaults to documentation/screenshots/)")
+parser.add_argument(
+    "--out", default=None, help="Output folder (defaults to documentation/screenshots/)"
+)
 parser.add_argument("--prefix", default="report", help="Filename prefix")
 parser.add_argument("--list", action="store_true", help="List sheets and exit")
-parser.add_argument("--no-kill", action="store_true", help="Do not kill Excel before starting")
-parser.add_argument("--keep", action="store_true", help="Do not delete existing PNGs in output folder before exporting")
+parser.add_argument(
+    "--force-kill-excel",
+    action="store_true",
+    help="DESTRUCTIVE: kill all Excel processes before/after export",
+)
+parser.add_argument(
+    "--keep",
+    action="store_true",
+    help="Do not delete existing PNGs in output folder before exporting",
+)
 args = parser.parse_args()
 
 script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -30,7 +63,10 @@ if not path:
         path = candidates[0]
         print(f"Using newest report: {path}")
     else:
-        print("No workbook given and Reports\\ holds no .xlsx. Pass --path.", file=sys.stderr)
+        print(
+            "No workbook given and Reports\\ holds no .xlsx. Pass --path.",
+            file=sys.stderr,
+        )
         sys.exit(2)
 
 if not os.path.exists(path):
@@ -41,7 +77,7 @@ os.makedirs(out_folder, exist_ok=True)
 
 if not args.keep:
     for f in os.listdir(out_folder):
-        if f.lower().endswith(".png"):
+        if f.lower().startswith("report-") and f.lower().endswith(".png"):
             try:
                 os.remove(os.path.join(out_folder, f))
             except OSError:
@@ -54,7 +90,9 @@ def save_sheet_image(workbook, worksheet, png_path):
     first_col = used.Column
     last_row = first_row + used.Rows.Count - 1
     last_col = first_col + used.Columns.Count - 1
-    rng = worksheet.Range(worksheet.Cells(first_row, first_col), worksheet.Cells(last_row, last_col))
+    rng = worksheet.Range(
+        worksheet.Cells(first_row, first_col), worksheet.Cells(last_row, last_col)
+    )
 
     worksheet.Activate()
     try:
@@ -64,7 +102,7 @@ def save_sheet_image(workbook, worksheet, png_path):
     time.sleep(0.5)
 
     copied = False
-    for attempt in range(3):
+    for _attempt in range(3):
         try:
             rng.CopyPicture(Appearance=1, Format=2)  # xlScreen, xlBitmap
             copied = True
@@ -73,7 +111,7 @@ def save_sheet_image(workbook, worksheet, png_path):
             time.sleep(1.0)
     if not copied:
         # fallback picture format
-        for attempt in range(2):
+        for _attempt in range(2):
             try:
                 rng.CopyPicture(Appearance=1, Format=1)
                 copied = True
@@ -111,13 +149,14 @@ def save_sheet_image(workbook, worksheet, png_path):
             pass
 
 
-if not args.no_kill:
+if args.force_kill_excel:
     try:
         subprocess.run(["taskkill", "/F", "/IM", "excel.exe"], capture_output=True)
     except Exception:
         pass
     time.sleep(2.0)
 
+excel_before = excel_pids()
 xl = win32com.client.DispatchEx("Excel.Application")
 xl.Visible = False
 xl.DisplayAlerts = False
@@ -172,10 +211,25 @@ finally:
         xl.Quit()
     except Exception:
         pass
-    try:
-        subprocess.run(["taskkill", "/F", "/IM", "excel.exe"], capture_output=True)
-    except Exception:
-        pass
+    wb = None
+    xl = None
+    gc.collect()
+    deadline = time.time() + 5.0
+    remaining = excel_pids() - excel_before
+    while remaining and time.time() < deadline:
+        time.sleep(0.2)
+        remaining = excel_pids() - excel_before
+    if remaining:
+        print(f"Cleaning up Excel process(es) started by this script: {sorted(remaining)}")
+        for pid in sorted(remaining):
+            try:
+                subprocess.run(
+                    ["taskkill", "/F", "/PID", str(pid)],
+                    capture_output=True,
+                    timeout=10,
+                )
+            except Exception:
+                pass
 
 if exported == 0 and not args.list and args.sheets:
     print("Nothing exported.", file=sys.stderr)

@@ -186,7 +186,8 @@ Public Sub FormatDashboard(ByVal ws As Worksheet, ByVal reportStamp As String, B
     LogMsg "FormatDashboard done"
     Exit Sub
 EH:
-    LogErr "FormatDashboard"
+    If Err.Number <> 0 Then LogErr "FormatDashboard"
+    Err.Clear
     Resume Next
 End Sub
 
@@ -216,7 +217,7 @@ Private Sub AddKpiCard(ByVal ws As Worksheet, ByVal labelAddr As String, ByVal v
         .VerticalAlignment = xlCenter
         .Interior.Color = fillColor
     End With
-    If Err.Number <> 0 Then LogErr "AddKpiCard"
+    If Err.Number <> 0 Then LogErr "AddKpiCard:" & labelAddr
     Err.Clear
 End Sub
 
@@ -386,7 +387,7 @@ Public Sub FormatManagerSheet(ByVal ws As Worksheet, ByVal managerName As String
     LogMsg "FormatManagerSheet done: " & managerName
     Exit Sub
 EH:
-    LogErr "FormatManagerSheet:" & managerName
+    If Err.Number <> 0 Then LogErr "FormatManagerSheet:" & managerName
     Err.Clear
     Resume Next
 End Sub
@@ -461,7 +462,7 @@ Public Sub BuildRepTotalsSection(ByVal ws As Worksheet, ByVal headerRow As Long,
     LogMsg "BuildRepTotalsSection done"
     Exit Sub
 EH:
-    LogErr "BuildRepTotalsSection"
+    If Err.Number <> 0 Then LogErr "BuildRepTotalsSection"
     Err.Clear
 End Sub
 
@@ -510,6 +511,6 @@ Public Sub FormatRawData(ByVal ws As Worksheet, ByVal lastCol As Long, ByVal las
     LogMsg "FormatRawData done"
     Exit Sub
 EH:
-    LogErr "FormatRawData"
+    If Err.Number <> 0 Then LogErr "FormatRawData"
     Err.Clear
 End Sub

@@ -1,0 +1,63 @@
+[project]
+name = "re-auth-report-builder"
+version = "1.0.0"
+description = "VBA-driven Re-Auth report builder with a Python COM automation harness"
+requires-python = ">=3.10"
+dependencies = ["pywin32", "psutil", "pyvbaanalysis"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py39"
+src = ["scripts"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "C", "N", "I", "UP", "B", "SIM", "RUF"]
+ignore = [
+    "E501",      # line length (ruff format handles wrapping where sensible)
+    "BLE001",    # blind excepts are intentional COM-glue resilience (errors are logged)
+    "S110",      # try-except-pass/log is intentional resilience in COM glue
+    "S112",      # try-except-continue is intentional in watcher poll loop
+    "DTZ005",    # naive local timestamps match VBA Format(Now) log format
+    "DTZ006",    # datetime.fromtimestamp for log mtime comparisons
+    "DTZ007",    # datetime.strptime without tz for parsing local log timestamps
+    "DTZ901",    # datetime.min/max used as sort sentinels
+    "PLW1510",   # subprocess errors are captured and logged manually
+    "SIM105",    # broad excepts in COM glue are intentional (logged)
+    "C901",      # complex COM-glue functions are intentional
+    "N816",      # Windows API handle globals (user32, kernel32, ...)
+]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+
+[tool.ruff.lint.isort]
+force-sort-within-sections = true
+
+[tool.mypy]
+python_version = "3.10"
+warn_return_any = true
+warn_unused_ignores = true
+disallow_untyped_defs = false
+exclude = [
+    "scripts/(run.report|sync.template|watch.compile.error|answer.dialogs|snapshot.report|monitor.logs|verify.report|test.compile)\\.py",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = "test_*.py"
+addopts = ["-p", "no:randomly"]
+
+[tool.coverage.run]
+source = ["scripts"]
+omit = ["scripts/*_test.py", "scripts/*_test2.py", "scripts/_*.py"]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "if self.debug:",
+    "if settings.DEBUG",
+    "raise NotImplementedError",
+    "if __name__ == __main__:",
+]

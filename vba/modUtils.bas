@@ -11,7 +11,13 @@ Public Function LastUsedRow(ByVal ws As Worksheet) As Long
         LastUsedRow = 0
         Exit Function
     End If
-    LastUsedRow = ws.Cells.Find("*", SearchOrder:=xlByRows, SearchDirection:=xlPrevious).Row
+    Dim foundCell As Range
+    Set foundCell = ws.Cells.Find("*", SearchOrder:=xlByRows, SearchDirection:=xlPrevious)
+    If foundCell Is Nothing Then
+        LastUsedRow = 0
+        Exit Function
+    End If
+    LastUsedRow = foundCell.Row
 End Function
 
 Public Function LastUsedColumn(ByVal ws As Worksheet) As Long
@@ -20,7 +26,13 @@ Public Function LastUsedColumn(ByVal ws As Worksheet) As Long
         LastUsedColumn = 0
         Exit Function
     End If
-    LastUsedColumn = ws.Cells.Find("*", SearchOrder:=xlByColumns, SearchDirection:=xlPrevious).Column
+    Dim foundCell As Range
+    Set foundCell = ws.Cells.Find("*", SearchOrder:=xlByColumns, SearchDirection:=xlPrevious)
+    If foundCell Is Nothing Then
+        LastUsedColumn = 0
+        Exit Function
+    End If
+    LastUsedColumn = foundCell.Column
 End Function
 
 Public Function FindHeaderRow(ByVal ws As Worksheet) As Long
@@ -90,15 +102,23 @@ End Function
 
 Public Sub NormalizeDateColumn(ByVal ws As Worksheet, ByVal headerRow As Long, ByVal lastRow As Long, ByVal col As Long)
     Dim r As Long, v As Variant, dt As Date
+    Dim converted As Long, skipped As Long
     On Error Resume Next
-    If col <= 0 Or headerRow <= 0 Or lastRow <= headerRow Then Exit Sub
+    If col <= 0 Or headerRow <= 0 Or lastRow <= headerRow Then
+        LogMsg "NormalizeDateColumn skipped: col=" & CStr(col) & " headerRow=" & CStr(headerRow) & " lastRow=" & CStr(lastRow)
+        Exit Sub
+    End If
     For r = headerRow + 1 To lastRow
         v = ws.Cells(r, col).Value
         If TryGetExcelDate(v, dt) Then
             ws.Cells(r, col).Value = dt
             ws.Cells(r, col).NumberFormat = "m/d/yyyy"
+            converted = converted + 1
+        ElseIf Len(Trim$(CStr(v))) > 0 Then
+            skipped = skipped + 1
         End If
     Next r
+    LogMsg "NormalizeDateColumn col=" & CStr(col) & " converted=" & CStr(converted) & " unparsed=" & CStr(skipped)
 End Sub
 
 Public Function SafeSheetName(ByVal name As String, ByVal wb As Workbook) As String
@@ -121,6 +141,9 @@ Public Function SafeSheetName(ByVal name As String, ByVal wb As Workbook) As Str
         i = i + 1
     Loop
     SafeSheetName = candidate
+    If StrComp(candidate, Trim$(name), vbBinaryCompare) <> 0 Then
+        LogMsg "SafeSheetName: '" & Trim$(name) & "' -> '" & candidate & "'"
+    End If
 End Function
 
 Public Function SheetExists(ByVal wb As Workbook, ByVal sheetName As String) As Boolean
@@ -273,14 +296,19 @@ Public Sub HideUnusedCells(ByVal ws As Worksheet)
     ws.Columns.Hidden = False
     If lastRow > 0 And lastRow < ws.Rows.Count Then ws.Rows((lastRow + 1) & ":" & ws.Rows.Count).Hidden = True
     If lastCol > 0 And lastCol < ws.Columns.Count Then ws.Columns(lastCol + 1).Resize(, ws.Columns.Count - lastCol).Hidden = True
+    If Err.Number <> 0 Then LogErr "HideUnusedCells:" & ws.Name
+    Err.Clear
 End Sub
 
 Public Function BuildOutputPath(ByVal srcWb As Workbook) As String
     Dim reportsDir As String, stamp As String
     On Error Resume Next
     reportsDir = GetReportsDir()
-    If Len(reportsDir) = 0 Then reportsDir = GetProjectRoot() & "\Reports\"
-    stamp = Format(Now, "yyyy-mm-dd_HHMM")
+    If Len(reportsDir) = 0 Then
+        LogMsg "WARN: GetReportsDir returned empty; falling back to project root"
+        reportsDir = GetProjectRoot() & "\Reports\"
+    End If
+    stamp = Format(Now, "yyyy-mm-dd_HHMMSS")
     BuildOutputPath = reportsDir & "ReAuth_Report_" & stamp & ".xlsx"
 End Function
 
@@ -341,24 +369,19 @@ Public Function AUTO_SOURCE_PATH_FILE() As String
     AUTO_SOURCE_PATH_FILE = GetLogDir() & AUTO_SOURCE_FILE_NAME
 End Function
 
-Public Function AUTO_SKIP_PRIOR_FILE() As String
-    AUTO_SKIP_PRIOR_FILE = GetLogDir() & AUTO_SKIP_PRIOR_FILE_NAME
-End Function
-
 Public Sub EnsureFolderExists(ByVal folderPath As String)
     On Error Resume Next
     If Len(folderPath) = 0 Then Exit Sub
     If Right$(folderPath, 1) <> "\" Then folderPath = folderPath & "\"
-    If Len(Dir$(folderPath, vbDirectory)) = 0 Then
-        ' try simple MkDir chain for one level deep common case
-        Dim root As String
-        root = Left$(folderPath, Len(folderPath) - 1)
-        root = Left$(root, InStrRev(root, "\"))
-        If Len(root) > 0 Then
-            If Len(Dir$(root, vbDirectory)) = 0 Then MkDir root
-        End If
-        MkDir folderPath
+    If Len(Dir$(folderPath, vbDirectory)) <> 0 Then Exit Sub
+    Dim parent As String, slashPos As Long
+    parent = Left$(folderPath, Len(folderPath) - 1)
+    slashPos = InStrRev(parent, "\")
+    If slashPos > 0 Then
+        parent = Left$(parent, slashPos)
+        EnsureFolderExists parent
     End If
+    MkDir folderPath
 End Sub
 
 Public Function SelectExcelFile(ByVal title As String, ByVal initialDir As String) As Variant

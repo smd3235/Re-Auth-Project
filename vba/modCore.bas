@@ -38,6 +38,12 @@ Public Function CreateReAuthReport() As Boolean
     LogMsg "=== CreateReAuthReport START ==="
     LogStep "CreateReAuthReport", "init run log=" & mRunLogPath
     LogMsg "Excel=" & Application.Version & " Template=" & ThisWorkbook.FullName
+    LogMsg "Context: version=" & MACRO_VERSION & " user=" & Environ$("USERNAME") & _
+            " OS=" & Application.OperatingSystem & " build=" & Application.Build
+    LogMsg "Context: project_root=" & GetProjectRoot()
+    LogMsg "Context: log_dir=" & GetLogDir() & " reports_dir=" & GetReportsDir()
+    LogMsg "Context: auto_source_file=" & AUTO_SOURCE_PATH_FILE() & _
+            " exists=" & CStr(Len(Dir$(AUTO_SOURCE_PATH_FILE())) > 0)
 
     oldCalc = Application.Calculation
     oldScreen = Application.ScreenUpdating
@@ -92,11 +98,16 @@ Public Function CreateReAuthReport() As Boolean
 
     LogStep "CreateReAuthReport", "opening source " & CStr(sourcePath)
     Application.StatusBar = "Opening source data..."
+    If Len(Dir$(CStr(sourcePath))) = 0 Then
+        Err.Raise vbObjectError + 1004, "CreateReAuthReport", "Source file not found: " & CStr(sourcePath)
+    End If
+    LogMsg "Source file bytes=" & CStr(FileLen(CStr(sourcePath)))
     Set sourceWb = Workbooks.Open(Filename:=CStr(sourcePath), ReadOnly:=True, UpdateLinks:=False)
     If sourceWb Is Nothing Then Err.Raise vbObjectError + 1001, "CreateReAuthReport", "Failed to open source workbook"
     sourceName = sourceWb.Name
     reportStamp = Format(Now, "yyyy-mm-dd hh:nn AM/PM")
-    LogMsg "Source opened: " & sourceWb.FullName & " | sheet=" & sourceWb.Worksheets(1).Name
+    LogMsg "Source opened: " & sourceWb.FullName & " | sheets=" & sourceWb.Worksheets.Count & _
+            " | sheet1=" & sourceWb.Worksheets(1).Name
 
     Set raw = sourceWb.Worksheets(1)
     headerRow = FindHeaderRow(raw)
@@ -115,6 +126,13 @@ Public Function CreateReAuthReport() As Boolean
     lastCol = LastUsedColumn(raw)
     LogMsg "Source parsed: headerRow=" & headerRow & " lastRow=" & lastRow & " lastCol=" & lastCol & _
             " managerCol=" & managerCol & " statusCol=" & statusCol & " dueCol=" & dueCol & " startCol=" & startCol
+    LogMsg "Header mapping: manager=" & HeaderState(managerCol) & " status=" & HeaderState(statusCol) & _
+            " due=" & HeaderState(dueCol) & " start=" & HeaderState(startCol) & _
+            " denial=" & HeaderState(FindHeaderColumn(raw, headerRow, DENIAL_DATE_HEADER))
+    If managerCol = 0 Then LogMsg "WARN: header not found '" & MANAGER_HEADER & "' - all rows will be Unassigned"
+    If statusCol = 0 Then LogMsg "WARN: header not found '" & AUTH_STATUS_HEADER & "' - status counts will be 0"
+    If dueCol = 0 Then LogMsg "WARN: header not found '" & REAUTH_DUE_HEADER & "' - due dates not normalized"
+    If startCol = 0 Then LogMsg "WARN: header not found '" & AUTH_START_HEADER & "' - start dates not normalized"
 
     If lastRow <= headerRow Then
         LogMsg "No data rows found"
@@ -182,6 +200,7 @@ Public Function CreateReAuthReport() As Boolean
 
     LogMsg "Counts: Total=" & totalCount & " PastDue=" & pastDue & " Upcoming=" & upcoming & _
             " Denied=" & denied & " Other=" & otherStatus & " Managers=" & managerNames.Count
+    LogMsg "Phase grouping elapsed(s)=" & Format(TimerDiff(mReportStartTime, Now), "0.00")
 
     If totalCount = 0 Then
         LogMsg "No records to report"
@@ -209,8 +228,8 @@ Public Function CreateReAuthReport() As Boolean
         AUTH_START_HEADER, _
         AUTHORIZATION_STATUS_HEADER, _
         TASK_HEADER, _
-        "Patient/Packet Status", _
-        "Treatment Physician" _
+        PACKET_STATUS_HEADER, _
+        TREATMENT_PHYSICIAN_HEADER _
     )
     mgrColCount = UBound(mgrHeaders) - LBound(mgrHeaders) + 1
     LogMsg "Manager tab columns=" & mgrColCount & " headerRow=" & MANAGER_HEADER_ROW
@@ -235,6 +254,7 @@ Public Function CreateReAuthReport() As Boolean
         HideUnusedCells ws
         LogMsg "Tab done: " & ws.Name
     Next i
+    LogMsg "Phase manager tabs elapsed(s)=" & Format(TimerDiff(mReportStartTime, Now), "0.00")
 
     LogStep "CreateReAuthReport", "building Raw Data"
     Application.StatusBar = "Creating Raw Data..."
@@ -251,7 +271,8 @@ Public Function CreateReAuthReport() As Boolean
     ApplyDateFormatsByHeader rawOut, 1, UBound(arrRaw, 1), AUTH_START_HEADER
     ApplyDateFormatsByHeader rawOut, 1, UBound(arrRaw, 1), "Initial Authorization Denial Date"
     HideUnusedCells rawOut
-    LogMsg "Raw Data done rows=" & UBound(arrRaw, 1)
+    LogMsg "Raw Data done rows=" & (UBound(arrRaw, 1) - 1) & " data (+header)"
+    LogMsg "Phase raw data elapsed(s)=" & Format(TimerDiff(mReportStartTime, Now), "0.00")
 
     LogStep "CreateReAuthReport", "building Dashboard"
     Application.StatusBar = "Building dashboard..."
@@ -259,12 +280,18 @@ Public Function CreateReAuthReport() As Boolean
         managers, managerCounts, managerPastDue, managerSheetNames
     HideUnusedCells dashboard
     dashboard.Activate
+    LogMsg "Phase dashboard elapsed(s)=" & Format(TimerDiff(mReportStartTime, Now), "0.00")
 
     savePath = BuildOutputPath(srcWb)
+    If Len(savePath) = 0 Then Err.Raise vbObjectError + 1006, "CreateReAuthReport", "BuildOutputPath returned an empty path"
     LogStep "CreateReAuthReport", "saving " & savePath
     Application.StatusBar = "Saving report..."
     outWb.SaveAs Filename:=savePath, FileFormat:=xlOpenXMLWorkbook
-    LogMsg "Saved: " & savePath
+    If Len(Dir$(savePath)) = 0 Then
+        Err.Raise vbObjectError + 1005, "CreateReAuthReport", "SaveAs reported success but output file not found: " & savePath
+    End If
+    LogMsg "Saved: " & savePath & " | bytes=" & CStr(FileLen(savePath))
+    LogMsg "Phase save elapsed(s)=" & Format(TimerDiff(mReportStartTime, Now), "0.00")
 
     WriteCompletionMarker savePath
     LogMsg "Run duration(s): " & Format(TimerDiff(mReportStartTime, Now), "0.00")
@@ -275,6 +302,7 @@ Public Function CreateReAuthReport() As Boolean
 CleanExit:
     On Error Resume Next
     mInReportRun = False
+    LogMsg "CleanExit: success=" & CStr(CreateReAuthReport) & " step=" & mCurrentStep
     If Not sourceWb Is Nothing Then sourceWb.Close SaveChanges:=False
     Application.StatusBar = False
     Application.ScreenUpdating = oldScreen
@@ -288,10 +316,11 @@ CleanFail:
     errNum = Err.Number
     errDesc = Err.Description
     errLine = Erl
-    failMsg = "CreateReAuthReport failed | Err=" & errNum & " | " & errDesc & " | Erl=" & errLine
+    failMsg = "CreateReAuthReport failed | Err=" & errNum & " | " & errDesc & " | Erl=" & errLine & _
+              " | Step=" & mCurrentStep
     On Error Resume Next
     LogMsg failMsg
-    LogErr "CreateReAuthReport(captured): " & failMsg
+    LogErr "CreateReAuthReport", errNum, errDesc, errLine
     mInReportRun = False
     If Not outWb Is Nothing Then outWb.Close SaveChanges:=False
     If Not sourceWb Is Nothing Then sourceWb.Close SaveChanges:=False
@@ -303,9 +332,18 @@ CleanFail:
     WriteCompletionMarker "(failed) " & failMsg
     MsgBox "Report creation failed." & vbCrLf & vbCrLf & _
            "Error: " & errNum & " - " & errDesc & vbCrLf & _
-           "Line: " & errLine & vbCrLf & vbCrLf & _
+           "Line: " & errLine & vbCrLf & _
+           "Step: " & mCurrentStep & vbCrLf & vbCrLf & _
            "See log\macro-debug.log and log\reauth-complete.txt for details.", vbCritical
     CreateReAuthReport = False
+End Function
+
+Private Function HeaderState(ByVal colIdx As Long) As String
+    If colIdx > 0 Then
+        HeaderState = "col" & CStr(colIdx)
+    Else
+        HeaderState = "MISSING"
+    End If
 End Function
 
 Private Function CStrSafe(ByVal v As Variant) As String

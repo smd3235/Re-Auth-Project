@@ -1,9 +1,9 @@
-﻿# watch-compile-error.py - capture VBA compile/runtime error dialogs for Re-Auth
+# watch-compile-error.py - capture VBA compile/runtime error dialogs for Re-Auth
 import ctypes
-import ctypes.wintypes as wintypes
+from ctypes import wintypes
+from datetime import datetime
 import os
 import time
-from datetime import datetime
 
 user32 = ctypes.windll.user32
 kernel32 = ctypes.windll.kernel32
@@ -23,41 +23,54 @@ log_dir = os.path.join(project_root, "log")
 os.makedirs(log_dir, exist_ok=True)
 log_path = os.path.join(log_dir, "watcher.log")
 
+
 def write_log(text):
     stamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    for ln in [l for l in str(text).splitlines() if l.strip()]:
+    for ln in [line for line in str(text).splitlines() if line.strip()]:
         with open(log_path, "a", encoding="utf-8") as f:
             f.write(f"{stamp} | {ln}\n")
+
 
 def win_text(hwnd):
     buf = ctypes.create_unicode_buffer(1024)
     GetWindowTextW(hwnd, buf, 1024)
     return buf.value
 
+
 def win_class(hwnd):
     buf = ctypes.create_unicode_buffer(256)
     GetClassNameW(hwnd, buf, 256)
     return buf.value
 
+
 def dialog_text(hwnd):
     parts = [win_text(hwnd)]
     sb = []
+
     def cb(child, _):
         t = win_text(child)
         if t:
             sb.append(t)
         return True
+
     EnumChildWindows(hwnd, EnumProc(cb), 0)
     if sb:
         parts.append(" | " + " | ".join(sb))
     return "".join(parts)
 
+
 def excel_pids():
     try:
         import psutil
-        return {p.pid for p in psutil.process_iter(["name"]) if p.info.get("name", "").lower() == "excel.exe"}
+
+        return {
+            p.pid
+            for p in psutil.process_iter(["name"])
+            if p.info.get("name", "").lower() == "excel.exe"
+        }
     except Exception:
         return set()
+
 
 class Watcher:
     def __init__(self):
@@ -69,6 +82,7 @@ class Watcher:
         pids = excel_pids()
         if not pids:
             return hits, killed
+
         def cb(hwnd, _):
             if not IsWindowVisible(hwnd):
                 return True
@@ -96,8 +110,10 @@ class Watcher:
             else:
                 PostMessageW(hwnd, WM_COMMAND, IDOK, 0)
             return True
+
         EnumWindows(EnumProc(cb), 0)
         return hits, killed
+
 
 def main():
     w = Watcher()
@@ -107,7 +123,11 @@ def main():
     try:
         while time.time() < deadline:
             time.sleep(0.5)
-            hits, killed = w.poll()
+            try:
+                hits, killed = w.poll()
+            except Exception as e:
+                write_log(f"watcher poll error: {e}")
+                continue
             for h in hits:
                 write_log(f"DIALOG: {h}")
                 print(f"Captured: {h}")
@@ -115,6 +135,7 @@ def main():
                 write_log(f"KILLED EXCEL pid={kp}")
     finally:
         write_log("watcher stopped")
+
 
 if __name__ == "__main__":
     main()

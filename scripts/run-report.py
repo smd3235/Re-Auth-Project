@@ -1,15 +1,20 @@
-﻿# run-report.py - robust unattended run for Re-Auth report
-# Includes watchdog, dialog auto-answerer, realtime logging, and diagnostics.
+# run-report.py - robust unattended run for Re-Auth report
+# Includes preflight validation, watchdog, dialog auto-answerer, realtime logging,
+# output verification, and diagnostics.
 import argparse
+import csv
 import ctypes
-import ctypes.wintypes as wintypes
+from ctypes import wintypes
+from datetime import datetime
+import gc
 import os
+import platform
 import shutil
 import subprocess
 import sys
 import threading
 import time
-from datetime import datetime
+import zipfile
 
 import win32com.client
 
@@ -62,7 +67,11 @@ debug_log = os.path.join(log_dir, "macro-debug.log")
 
 before = set()
 if os.path.isdir(reports_dir):
-    before = {f.name for f in os.scandir(reports_dir) if f.name.lower().endswith(".xlsx")}
+    before = {
+        f.name
+        for f in os.scandir(reports_dir)
+        if f.name.lower().endswith(".xlsx") and not f.name.startswith("~$")
+    }
 
 for p in [completion_marker]:
     try:
@@ -74,7 +83,7 @@ for p in [completion_marker]:
 debug_line_offset = 0
 if os.path.exists(debug_log):
     try:
-        with open(debug_log, "r", encoding="utf-8", errors="replace") as f:
+        with open(debug_log, encoding="utf-8", errors="replace") as f:
             debug_line_offset = sum(1 for _ in f)
     except Exception:
         debug_line_offset = 0
@@ -102,6 +111,86 @@ append_run_log(f"Completion marker: {completion_marker}")
 append_run_log(f"Python PID: {os.getpid()}")
 append_run_log(f"Max run seconds: {max_run_seconds}")
 
+
+def _log_uncaught(exc_type, exc, tb):
+    """Guarantee a final outcome line even when the harness crashes."""
+    try:
+        append_run_log(f"Final outcome: CRASH: {exc_type.__name__}: {exc}")
+    except Exception:
+        pass
+    sys.__excepthook__(exc_type, exc, tb)
+
+
+sys.excepthook = _log_uncaught
+
+append_run_log(
+    f"Env: python={platform.python_version()} impl={platform.python_implementation()} os={platform.platform()}"
+)
+try:
+    import psutil
+
+    append_run_log(f"Env: psutil={psutil.__version__}")
+except Exception as e:
+    append_run_log(f"Env: psutil unavailable ({e})")
+
+REQUIRED_HEADERS = [
+    "Assigned Sales Manager",
+    "Auth Status",
+    "Patient Name",
+    "Re-auth Due Date",
+]
+
+
+def preflight():
+    """Validate inputs before touching Excel. Returns True when safe to run."""
+    ok = True
+    if not os.path.exists(template):
+        append_run_log(f"PREFLIGHT FAIL: template not found: {template}")
+        return False
+    append_run_log(f"Preflight: template bytes={os.path.getsize(template)}")
+    if not os.path.exists(source_path):
+        append_run_log(f"PREFLIGHT FAIL: source not found: {source_path}")
+        return False
+    size = os.path.getsize(source_path)
+    append_run_log(f"Preflight: source bytes={size} ext={os.path.splitext(source_path)[1].lower()}")
+    if size == 0:
+        append_run_log("PREFLIGHT FAIL: source file is empty")
+        return False
+    if source_path.lower().endswith((".csv", ".txt")):
+        header = None
+        for enc in ("utf-8-sig", "cp1252"):
+            try:
+                with open(source_path, encoding=enc, newline="") as f:
+                    header = next(csv.reader(f), None)
+                if header:
+                    append_run_log(f"Preflight: header read with {enc}")
+                    break
+            except Exception as e:
+                append_run_log(f"Preflight: header read failed ({enc}): {e}")
+                header = None
+        if header:
+            normalized = {h.strip().lower() for h in header}
+            missing = [h for h in REQUIRED_HEADERS if h.lower() not in normalized]
+            append_run_log(
+                f"Preflight: columns={len(header)} present="
+                + ", ".join(h for h in REQUIRED_HEADERS if h.lower() in normalized)
+            )
+            if missing:
+                append_run_log("PREFLIGHT FAIL: missing required column(s): " + ", ".join(missing))
+                ok = False
+        else:
+            append_run_log("PREFLIGHT WARN: could not read source header")
+    else:
+        append_run_log("Preflight: header validation skipped (non-CSV source)")
+    return ok
+
+
+if not preflight():
+    append_run_log("Final outcome: PREFLIGHT_FAILED")
+    print("NEW_REPORT=")
+    print("OUTCOME=PREFLIGHT_FAILED")
+    sys.exit(2)
+
 # Auto-mode files for VBA
 auto_source_file = os.path.join(log_dir, "auto-source.txt")
 with open(auto_source_file, "w", encoding="utf-8") as f:
@@ -120,6 +209,7 @@ cancel_event = threading.Event()
 def excel_pids():
     try:
         import psutil
+
         pids = set()
         for p in psutil.process_iter(["name"]):
             try:
@@ -179,16 +269,21 @@ def excel_dialogs():
 
 def send_keys(text):
     class KEYBDINPUT(ctypes.Structure):
-        _fields_ = [("wVk", wintypes.WORD), ("wScan", wintypes.WORD), ("dwFlags", wintypes.DWORD),
-                    ("time", wintypes.DWORD), ("dwExtraInfo", ctypes.c_void_p)]
+        _fields_ = [
+            ("wVk", wintypes.WORD),
+            ("wScan", wintypes.WORD),
+            ("dwFlags", wintypes.DWORD),
+            ("time", wintypes.DWORD),
+            ("dwExtraInfo", ctypes.c_void_p),
+        ]
 
     class INPUT(ctypes.Structure):
         _fields_ = [("type", wintypes.DWORD), ("ki", KEYBDINPUT)]
 
-    VkKeyScanW = user32.VkKeyScanW
+    vk_key_scan_w = user32.VkKeyScanW
     inputs = []
     for ch in text:
-        vk = VkKeyScanW(ord(ch) if isinstance(ch, str) else ch)
+        vk = vk_key_scan_w(ord(ch) if isinstance(ch, str) else ch)
         shift = (vk >> 8) & 0xFF
         if shift & 1:
             inputs.append(INPUT(1, KEYBDINPUT(0x10, 0, 0, 0, 0)))
@@ -204,8 +299,13 @@ def send_keys(text):
 
 def key_down_once(vk):
     class KEYBDINPUT(ctypes.Structure):
-        _fields_ = [("wVk", wintypes.WORD), ("wScan", wintypes.WORD), ("dwFlags", wintypes.DWORD),
-                    ("time", wintypes.DWORD), ("dwExtraInfo", ctypes.c_void_p)]
+        _fields_ = [
+            ("wVk", wintypes.WORD),
+            ("wScan", wintypes.WORD),
+            ("dwFlags", wintypes.DWORD),
+            ("time", wintypes.DWORD),
+            ("dwExtraInfo", ctypes.c_void_p),
+        ]
 
     class INPUT(ctypes.Structure):
         _fields_ = [("type", wintypes.DWORD), ("ki", KEYBDINPUT)]
@@ -230,10 +330,17 @@ def watchdog_thread():
             append_run_log("WATCHDOG: completion marker detected")
             return
         try:
-            new_files = [f.name for f in os.scandir(reports_dir)
-                         if f.name.lower().endswith(".xlsx") and f.name not in before]
+            new_files = [
+                f.name
+                for f in os.scandir(reports_dir)
+                if f.name.lower().endswith(".xlsx")
+                and not f.name.startswith("~$")
+                and f.name not in before
+            ]
             if new_files:
-                append_run_log(f"WATCHDOG: new report file(s) detected: {', '.join(new_files)}")
+                append_run_log(
+                    f"WATCHDOG: new report file(s) detected: {', '.join(sorted(new_files))}"
+                )
         except Exception:
             pass
     if not cancel_event.is_set():
@@ -253,21 +360,27 @@ def answerer_thread():
                     continue
                 cls = win_class(h)
                 title = win_text(h)
-                if not (cls in ("#32770", "bosa_sdm_MsoFiles", "wndclass_desked_gsk")
-                        or "Select" in title or "Choose" in title or "Microsoft Excel" in title
-                        or "Visual Basic" in title):
+                if not (
+                    cls in ("#32770", "bosa_sdm_MsoFiles", "wndclass_desked_gsk")
+                    or "Select" in title
+                    or "Choose" in title
+                    or "Microsoft Excel" in title
+                    or "Visual Basic" in title
+                ):
                     continue
                 write_log(ans_log, f"dialog: class={cls} title={title}")
                 if cls == "#32770" and title == "Microsoft Excel":
                     # try to capture child static text
                     try:
                         child_texts = []
-                        def ccb(child, _):
+
+                        def ccb(child, _, texts=child_texts):
                             t = win_text(child)
                             c = win_class(child)
                             if t and c == "Static":
-                                child_texts.append(t)
+                                texts.append(t)
                             return True
+
                         EnumChildWindows(h, EnumProc(ccb), 0)
                         if child_texts:
                             write_log(ans_log, f"  msg: {' | '.join(child_texts)}")
@@ -287,7 +400,11 @@ def answerer_thread():
                 if "PRIOR" in title:
                     key_down_once(VK_ESCAPE)
                     write_log(ans_log, "cancelled PRIOR picker")
-                elif "CURRENT" in title or "Select the Re-Auth" in title or "raw data" in title.lower():
+                elif (
+                    "CURRENT" in title
+                    or "Select the Re-Auth" in title
+                    or "raw data" in title.lower()
+                ):
                     edit = find_child(h, "Edit")
                     if edit is not None:
                         SendMessageW(edit, WM_SETTEXT, 0, source_path)
@@ -307,22 +424,39 @@ def answerer_thread():
             write_log(ans_log, f"answerer error: {e}")
 
 
-t_watch = threading.Thread(target=watchdog_thread, daemon=True)
-t_ans = threading.Thread(target=answerer_thread, daemon=True)
+def _guarded(name, fn):
+    def run():
+        try:
+            fn()
+        except Exception as e:
+            append_run_log(f"THREAD ERROR {name}: {e}")
+
+    return run
+
+
+t_watch = threading.Thread(target=_guarded("watchdog", watchdog_thread), daemon=True)
+t_ans = threading.Thread(target=_guarded("answerer", answerer_thread), daemon=True)
 t_watch.start()
 t_ans.start()
 
 excel = None
 wb = None
+excel_pids_before = set()
 try:
     # Trusted location + macro settings
     try:
         import winreg
-        key = winreg.CreateKey(winreg.HKEY_CURRENT_USER, r"Software\Microsoft\Office\16.0\Excel\Security")
+
+        key = winreg.CreateKey(
+            winreg.HKEY_CURRENT_USER, r"Software\Microsoft\Office\16.0\Excel\Security"
+        )
         winreg.SetValueEx(key, "VBAWarnings", 0, winreg.REG_DWORD, 1)
         winreg.SetValueEx(key, "AccessVBOM", 0, winreg.REG_DWORD, 1)
         winreg.CloseKey(key)
-        key = winreg.CreateKey(winreg.HKEY_CURRENT_USER, r"Software\Microsoft\Office\16.0\Excel\Security\Trusted Locations\ReAuthProject")
+        key = winreg.CreateKey(
+            winreg.HKEY_CURRENT_USER,
+            r"Software\Microsoft\Office\16.0\Excel\Security\Trusted Locations\ReAuthProject",
+        )
         winreg.SetValueEx(key, "Path", 0, winreg.REG_SZ, project_root)
         winreg.SetValueEx(key, "Description", 0, winreg.REG_SZ, "Re-Auth Project")
         winreg.SetValueEx(key, "AllowSubfolders", 0, winreg.REG_DWORD, 1)
@@ -330,6 +464,9 @@ try:
         append_run_log("Registry: macro access/trusted location configured")
     except Exception as e:
         append_run_log(f"Registry config warning: {e}")
+
+    excel_pids_before = excel_pids()
+    append_run_log(f"Excel baseline processes: {sorted(excel_pids_before)}")
 
     excel = win32com.client.DispatchEx("Excel.Application")
     excel.DisplayAlerts = False
@@ -380,10 +517,15 @@ try:
                 outcome = "SUCCESS"
             break
         try:
-            new_files = [f.name for f in os.scandir(reports_dir)
-                         if f.name.lower().endswith(".xlsx") and f.name not in before]
+            new_files = [
+                f.name
+                for f in os.scandir(reports_dir)
+                if f.name.lower().endswith(".xlsx")
+                and not f.name.startswith("~$")
+                and f.name not in before
+            ]
             if new_files:
-                append_run_log(f"Detected output file(s): {', '.join(new_files)}")
+                append_run_log(f"Detected output file(s): {', '.join(sorted(new_files))}")
                 run_completed = True
                 if outcome == "UNKNOWN":
                     outcome = "SUCCESS"
@@ -417,17 +559,71 @@ finally:
             os.remove(lock)
     except Exception:
         pass
+    try:
+        # Drop COM references so Excel can terminate; without this the process
+        # can linger until the Python interpreter exits.
+        wb = None
+        excel = None
+        gc.collect()
+        deadline = time.time() + 5.0
+        remaining = set(excel_pids()) - excel_pids_before
+        while remaining and time.time() < deadline:
+            time.sleep(0.2)
+            remaining = set(excel_pids()) - excel_pids_before
+        append_run_log(
+            f"Excel cleanup: after_exit_wait={len(excel_pids())} orphans={sorted(remaining)}"
+        )
+        if remaining:
+            for pid in sorted(remaining):
+                try:
+                    subprocess.run(
+                        ["taskkill", "/F", "/PID", str(pid)],
+                        capture_output=True,
+                        timeout=10,
+                    )
+                    append_run_log(f"Killed orphan Excel pid={pid}")
+                except Exception as e:
+                    append_run_log(f"Orphan kill failed pid={pid}: {e}")
+            time.sleep(1.0)
+            leftover = set(excel_pids()) - excel_pids_before
+            append_run_log(f"Excel cleanup: leftover={sorted(leftover)}")
+            if leftover:
+                append_run_log(
+                    f"WARN: Excel process(es) still running after cleanup: {sorted(leftover)}"
+                )
+    except Exception as e:
+        append_run_log(f"Excel cleanup check error: {e}")
 
 time.sleep(0.5)
 
 # Collect outputs
 try:
-    after = {f.name for f in os.scandir(reports_dir) if f.name.lower().endswith(".xlsx")}
+    after = {
+        f.name
+        for f in os.scandir(reports_dir)
+        if f.name.lower().endswith(".xlsx") and not f.name.startswith("~$")
+    }
     new_files = sorted(after - before)
 except Exception:
     new_files = []
 
-if new_files and outcome in ("UNKNOWN", "COMPLETED_WITH_ERROR"):
+verified_report = None
+if new_files:
+    candidate = os.path.join(reports_dir, new_files[-1])
+    try:
+        size = os.path.getsize(candidate)
+        is_zip = zipfile.is_zipfile(candidate)
+        append_run_log(f"Output verify: {new_files[-1]} bytes={size} xlsx_zip={is_zip}")
+        if size > 0 and is_zip:
+            verified_report = candidate
+        else:
+            append_run_log("Output verify FAILED: report is empty or not a valid xlsx")
+    except Exception as e:
+        append_run_log(f"Output verify error: {e}")
+
+if outcome == "SUCCESS" and new_files and not verified_report:
+    outcome = "OUTPUT_INVALID"
+elif verified_report and outcome in ("UNKNOWN", "COMPLETED_WITH_ERROR"):
     outcome = "SUCCESS"
 
 run_duration = time.time() - run_start_time
@@ -438,7 +634,7 @@ append_run_log(f"New report files: {new_files}")
 # Append macro-debug tail for this run
 try:
     if os.path.exists(debug_log):
-        with open(debug_log, "r", encoding="utf-8", errors="replace") as f:
+        with open(debug_log, encoding="utf-8", errors="replace") as f:
             lines = f.readlines()
         tail = lines[debug_line_offset:]
         if len(tail) > 200:
@@ -453,7 +649,7 @@ except Exception as e:
 try:
     if os.path.exists(completion_marker):
         append_run_log("--- completion marker ---")
-        with open(completion_marker, "r", encoding="utf-8", errors="replace") as f:
+        with open(completion_marker, encoding="utf-8", errors="replace") as f:
             for ln in f:
                 append_run_log("MARK " + ln.rstrip("\n\r"))
     else:
@@ -461,8 +657,8 @@ try:
 except Exception as e:
     append_run_log(f"Could not read completion marker: {e}")
 
-if new_files:
-    print("NEW_REPORT=" + os.path.join(reports_dir, new_files[-1]))
+if verified_report:
+    print("NEW_REPORT=" + verified_report)
 else:
     print("NEW_REPORT=")
 print("OUTCOME=" + outcome)

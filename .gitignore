@@ -1,7 +1,12 @@
 # Generated outputs and runtime artifacts
-Reports/*.xlsx
+Reports/
+Reports/archive/
 log/*
 !log/.gitkeep
+
+# Coverage reports
+.coverage
+htmlcov/
 
 # Keep documentation assets/screenshots
 !documentation/

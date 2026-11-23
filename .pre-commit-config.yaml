@@ -1,0 +1,39 @@
+# .pre-commit-config.yaml
+# Run these checks on every commit. Install once with: pre-commit install
+repos:
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.17.6
+    hooks:
+      - id: ruff
+        args: [--fix]
+      - id: ruff-format
+
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v2.4.1
+    hooks:
+      - id: mypy
+        additional_dependencies: [types-psutil, types-pywin32]
+        files: ^scripts/(scan-logs|cleanup|view-logs|monitor-logs)\\.py$
+
+  - repo: local
+    hooks:
+      - id: mdformat
+        name: mdformat
+        entry: mdformat
+        language: system
+        files: \\.md$
+        args: [--wrap, "100"]
+
+      - id: markdownlint
+        name: markdownlint
+        entry: markdownlint-cli2
+        language: system
+        files: \\.md$
+        args: [--config, .markdownlint-cli2.yaml, "**/*.md"]
+
+      - id: markdown-link-check
+        name: markdown-link-check
+        entry: markdown-link-check
+        language: system
+        files: \\.md$
+        args: ["**/*.md"]
